@@ -1,0 +1,162 @@
+.root {
+    -fx-font-family: "Arial", "Helvetica", sans-serif;
+    -fx-background-color: #10243B;
+}
+
+.menu-panel, .modal-panel, .placeholder-panel {
+    -fx-background-color: linear-gradient(to bottom, rgba(24, 54, 83, 0.97), rgba(16, 36, 59, 0.98));
+    -fx-background-radius: 24;
+    -fx-border-color: #5A9BC2;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(4, 12, 23, 0.58), 20, 0.25, 0, 7);
+}
+
+.menu-panel {
+    -fx-padding: 28 30 26 30;
+    -fx-spacing: 12;
+}
+
+.modal-panel, .placeholder-panel {
+    -fx-padding: 30 36 30 36;
+    -fx-spacing: 14;
+}
+
+.screen-title {
+    -fx-font-size: 39px;
+    -fx-font-weight: 900;
+    -fx-text-fill: #FFF0D5;
+    -fx-effect: dropshadow(gaussian, #071526, 3, 0.3, 0, 3);
+}
+
+.screen-kicker {
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #80D7ED;
+}
+
+.body-text {
+    -fx-font-size: 16px;
+    -fx-text-fill: #D9EAF2;
+    -fx-wrap-text: true;
+}
+
+.score-value {
+    -fx-font-size: 25px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFD66A;
+}
+
+.record-text {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #78E587;
+}
+
+.action-button {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFFFFF;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-width: 1.5;
+    -fx-cursor: hand;
+    -fx-padding: 10 18 10 18;
+    -fx-effect: dropshadow(gaussian, rgba(4, 15, 28, 0.7), 3, 0, 0, 3);
+}
+
+.action-button:hover {
+    -fx-effect: dropshadow(gaussian, rgba(154, 233, 255, 0.58), 10, 0.25, 0, 1);
+    -fx-translate-y: -1;
+}
+
+.action-button:pressed {
+    -fx-translate-y: 1;
+    -fx-effect: none;
+}
+
+.action-button:focused {
+    -fx-border-color: #FFF0A7;
+}
+
+.menu-button {
+    -fx-min-height: 47;
+    -fx-font-size: 17px;
+}
+
+.compact-button {
+    -fx-min-height: 34;
+    -fx-font-size: 13px;
+    -fx-padding: 7 13 7 13;
+}
+
+.primary-button {
+    -fx-background-color: linear-gradient(to bottom, #70E778, #24B94B);
+    -fx-border-color: #A8F7A0;
+}
+
+.blue-button {
+    -fx-background-color: linear-gradient(to bottom, #4AA9F0, #216FCB);
+    -fx-border-color: #91D9FF;
+}
+
+.gold-button {
+    -fx-background-color: linear-gradient(to bottom, #FFC95A, #E88A2B);
+    -fx-border-color: #FFE59A;
+}
+
+.purple-button {
+    -fx-background-color: linear-gradient(to bottom, #A879EC, #7147C5);
+    -fx-border-color: #D1B6FF;
+}
+
+.navy-button {
+    -fx-background-color: linear-gradient(to bottom, #2D608D, #183A61);
+    -fx-border-color: #6DB6E7;
+}
+
+.danger-button {
+    -fx-background-color: linear-gradient(to bottom, #EE7A70, #C54252);
+    -fx-border-color: #FFC0B7;
+}
+
+.game-hud {
+    -fx-background-color: linear-gradient(to bottom, #183653, #10243B);
+    -fx-border-color: #3E77A0;
+    -fx-border-width: 0 0 2 0;
+    -fx-padding: 8 14 8 14;
+}
+
+.hud-card {
+    -fx-background-color: rgba(5, 20, 37, 0.74);
+    -fx-background-radius: 11;
+    -fx-border-color: #3C7297;
+    -fx-border-radius: 11;
+    -fx-padding: 5 11 5 11;
+}
+
+.hud-label {
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #B8D9EC;
+}
+
+.hud-value {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #FFF0D5;
+}
+
+.life-value {
+    -fx-text-fill: #FF9EAF;
+}
+
+.hud-controls {
+    -fx-font-size: 12px;
+    -fx-text-fill: #B8D9EC;
+}
+
+.pause-strip {
+    -fx-background-color: #10243B;
+    -fx-padding: 9 16 9 16;
+}

@@ -1,47 +1,60 @@
 package com.dodgingcat.ui;
 
 import java.util.Objects;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 
 public class MainMenu {
 
+    private final int highScore;
     private final Runnable onStartGame;
+    private final Runnable onShop;
+    private final Runnable onHighScore;
+    private final Runnable onSettings;
     private final Runnable onExit;
 
-    public MainMenu(Runnable onStartGame, Runnable onExit) {
+    public MainMenu(int highScore, Runnable onStartGame, Runnable onShop, Runnable onHighScore,
+                    Runnable onSettings, Runnable onExit) {
+        this.highScore = highScore;
         this.onStartGame = Objects.requireNonNull(onStartGame, "onStartGame must not be null");
+        this.onShop = Objects.requireNonNull(onShop, "onShop must not be null");
+        this.onHighScore = Objects.requireNonNull(onHighScore, "onHighScore must not be null");
+        this.onSettings = Objects.requireNonNull(onSettings, "onSettings must not be null");
         this.onExit = Objects.requireNonNull(onExit, "onExit must not be null");
     }
 
     public Parent createView() {
-        Label title = new Label("DODGING CAT");
-        title.setFont(Font.font("Arial", FontWeight.BOLD, 48));
-        title.setStyle("-fx-text-fill: #263238;");
+        StackPane layeredRoot = new StackPane(CozyArtwork.createMenuBackdrop());
+        layeredRoot.setPrefSize(900, 600);
 
-        Button startButton = createMenuButton("Start Game");
-        startButton.setOnAction(event -> onStartGame.run());
+        Label kicker = UiKit.label("✦  SMALL CAT  •  BIG ADVENTURE  ✦", "screen-kicker");
+        Label title = UiKit.label("DODGING CAT", "screen-title");
+        Label subtitle = UiKit.label("Leap, collect, and dodge your way through a cozy home.",
+                "body-text");
+        Label bestScore = UiKit.label("★  BEST SCORE   " + highScore, "score-value");
 
-        Button exitButton = createMenuButton("Exit");
-        exitButton.setOnAction(event -> onExit.run());
+        VBox actions = new VBox(10,
+                UiKit.menuButton("▶  PLAY", "primary-button", onStartGame),
+                UiKit.menuButton("♣  CAT STYLE SHOP", "blue-button", onShop),
+                UiKit.menuButton("★  HIGH SCORE", "gold-button", onHighScore),
+                UiKit.menuButton("⚙  SETTINGS", "purple-button", onSettings));
+        actions.setPrefWidth(315);
+        VBox panel = new VBox(11, kicker, title, subtitle, bestScore, actions,
+                UiKit.compactButton("EXIT GAME", "navy-button", onExit));
+        panel.getStyleClass().add("menu-panel");
+        panel.setAlignment(Pos.CENTER_LEFT);
+        panel.setMaxWidth(390);
 
-        VBox root = new VBox(24, title, startButton, exitButton);
-        root.setAlignment(Pos.CENTER);
-        root.setStyle("-fx-background-color: linear-gradient(to bottom, #f7f3dc, #b7dce2);");
-
-        return root;
-    }
-
-    private Button createMenuButton(String text) {
-        Button button = new Button(text);
-        button.setMinWidth(180);
-        button.setMinHeight(42);
-        button.setFont(Font.font("Arial", FontWeight.SEMI_BOLD, 16));
-        return button;
+        HBox content = new HBox(panel);
+        content.setPadding(new Insets(60, 0, 38, 472));
+        content.setAlignment(Pos.CENTER_LEFT);
+        layeredRoot.getChildren().add(content);
+        return layeredRoot;
     }
 }
