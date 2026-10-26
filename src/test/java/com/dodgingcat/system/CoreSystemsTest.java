@@ -6,6 +6,7 @@ import com.dodgingcat.entity.Food;
 import com.dodgingcat.entity.GameObject;
 import com.dodgingcat.entity.GoldenFood;
 import com.dodgingcat.entity.NormalFood;
+import com.dodgingcat.entity.Obstacle;
 import com.dodgingcat.entity.ObstacleKind;
 import com.dodgingcat.entity.PaperPlane;
 import com.dodgingcat.entity.Platform;
@@ -176,7 +177,7 @@ class CoreSystemsTest {
 
         for (int spawn = 0; spawn < 20; spawn++) {
             Food food = spawner.spawnNormalFood(900, 480, List.of(shelf), null, List.of(),
-                    List.of(), null);
+                    List.of(), null).orElseThrow();
             double bottom = food.getY() + food.getHeight();
             assertTrue(Math.abs(bottom - 360) < 0.001 || Math.abs(bottom - 480) < 0.001);
             if (Math.abs(bottom - 360) < 0.001) {
@@ -197,7 +198,7 @@ class CoreSystemsTest {
         FallingFlowerPot obstacle = new FallingFlowerPot(430, 438, 100);
 
         NormalFood food = spawner.spawnNormalFood(900, 480, List.of(), cat, List.of(obstacle),
-                List.of(), previousFood);
+                List.of(), previousFood).orElseThrow();
         CollisionDetector detector = new CollisionDetector();
 
         assertFalse(detector.intersects(food, cat));
@@ -207,6 +208,18 @@ class CoreSystemsTest {
         assertEquals(480, food.getY() + food.getHeight(), 0.001);
         assertTrue(Math.hypot(food.getX() - previousFood.getX(), food.getY() - previousFood.getY())
                 >= SpawnManager.FOOD_SPAWN_CLEARANCE);
+    }
+
+    @Test
+    void normalFoodSpawnSkipsWhenAllFallbackPositionsWouldBeUnsafe() {
+        SpawnManager spawner = new SpawnManager(new FallbackRandom(), new DifficultyManager());
+        List<Obstacle> obstacles = List.of(
+                new RobotVacuum(120, 452, 115, 1),
+                new RobotVacuum(425, 452, 115, 1),
+                new RobotVacuum(730, 452, 115, 1));
+
+        assertTrue(spawner.spawnNormalFood(900, 480, List.of(), null, obstacles,
+                List.of(), null).isEmpty());
     }
 
     private static final class TestObject extends GameObject {
@@ -224,6 +237,18 @@ class CoreSystemsTest {
         @Override
         public double nextDouble(double origin, double bound) {
             return origin + (bound - origin) / 2;
+        }
+    }
+
+    private static final class FallbackRandom extends Random {
+        @Override
+        public int nextInt(int bound) {
+            return 0;
+        }
+
+        @Override
+        public double nextDouble() {
+            return 0.5;
         }
     }
 }

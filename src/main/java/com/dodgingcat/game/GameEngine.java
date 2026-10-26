@@ -48,8 +48,8 @@ public final class GameEngine {
         this.cat = new Cat(worldWidth * 0.14, groundY);
         this.spawnManager = new SpawnManager(
                 Objects.requireNonNull(random, "random generator must not be null"), difficultyManager);
-        foods.add(spawnManager.spawnNormalFood(worldWidth, groundY, platforms, cat,
-                obstacles, List.of(), null));
+        spawnManager.spawnNormalFood(worldWidth, groundY, platforms, cat,
+                obstacles, List.of(), null).ifPresent(foods::add);
     }
 
     public void update(double deltaSeconds, boolean movingLeft, boolean movingRight) {
@@ -155,8 +155,8 @@ public final class GameEngine {
             }
         }
         if (activeNormalFood == null) {
-            foods.add(spawnManager.spawnNormalFood(worldWidth, groundY, platforms, cat,
-                    obstacles, foods, previousNormalFood));
+            spawnManager.spawnNormalFood(worldWidth, groundY, platforms, cat,
+                    obstacles, foods, previousNormalFood).ifPresent(foods::add);
         }
     }
 }

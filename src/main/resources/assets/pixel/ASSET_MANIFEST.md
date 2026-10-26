@@ -1,10 +1,10 @@
 # Dodging Cat pixel-art asset guide
 
 `/assets/pixel/` is the classpath root for standalone PNG artwork; put its
-files below `src/main/resources/assets/pixel/`. No imported raster PNG files
-are currently shipped. The game therefore keeps the existing original JavaFX
-Canvas and `PixelSpriteLibrary` visuals as a compatibility fallback; no
-placeholder image files have been created.
+files below `src/main/resources/assets/pixel/`. The generated cozy-room scene
+is currently the only shipped runtime PNG. All other optional pixel assets
+continue to use the existing original JavaFX Canvas and `PixelSpriteLibrary`
+fallbacks; no placeholder image files have been created.
 
 `ClasspathImageLoader` caches each load and returns an empty result for a
 missing or invalid PNG. `GameCanvasRenderer` and `UiKit` then use their current
@@ -41,6 +41,16 @@ pixel scale. Rendering always uses the model dimensions in the final column.
 | Navy button skin | `/assets/pixel/ui/buttons/navy.png` | 192 x 48 | button background | Alpha optional |
 | Danger button skin | `/assets/pixel/ui/buttons/danger.png` | 192 x 48 | button background | Alpha optional |
 
+## Shipped runtime asset
+
+| Role | Resource path | Source | Source dimensions | Runtime dimensions | Processing |
+| --- | --- | --- | ---: | ---: | --- |
+| Cozy room background | `/assets/pixel/world/cozy-room.png` | OpenAI image generation tool, using the local concept references as style and composition references | 1619 x 972 | 900 x 540 | Nearest-neighbor resize; fully opaque standalone scene |
+
+The image contains the room layer only: it has no cat, collectible, hazard,
+HUD, button, label, or text. Its generation provenance and licensing status
+are recorded in `manifest.json`; no third-party licence is claimed for it.
+
 The file list above is also defined in `com.dodgingcat.ui.PixelAssetPaths`.
 PNG is required: the loader rejects non-PNG resource paths. The room background
 is deliberately a single standalone scene, not a concept collage.
@@ -65,7 +75,7 @@ is deliberately a single standalone scene, not a concept collage.
 ## Adding an asset safely
 
 1. Put the verified PNG at its exact path in this table. Do not add a dummy or
-   generated replacement solely to satisfy a missing path.
+   fake replacement solely to satisfy a missing path.
 2. Check it at 2x in the running game. The fallback disappears automatically
    only for the resource that was supplied; other missing resources continue to
    fall back safely.

@@ -13,6 +13,7 @@ import com.dodgingcat.entity.RollingBall;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.random.RandomGenerator;
 
 /** Creates occasional food and household obstacles using an injectable RNG. */
@@ -76,8 +77,8 @@ public final class SpawnManager {
             goldenFoodTimer = 0;
             if (countGoldenFood(activeFoods) < MAX_ACTIVE_GOLDEN_FOOD
                     && random.nextDouble() < GOLDEN_FOOD_CHANCE) {
-                food.add(createGoldenFood(worldWidth, groundY, platforms, player,
-                        activeObstacles, activeFoods));
+                createGoldenFood(worldWidth, groundY, platforms, player,
+                        activeObstacles, activeFoods).ifPresent(food::add);
             }
         }
         double obstacleInterval = difficultyManager.obstacleSpawnInterval(elapsedSeconds);
@@ -97,30 +98,31 @@ public final class SpawnManager {
      * Creates the one normal collectible for a run. This method is called only
      * at run creation and immediately after the previous normal food is removed.
      */
-    public NormalFood spawnNormalFood(double worldWidth, double groundY, List<Platform> platforms,
-                                      GameObject player, List<Obstacle> obstacles,
-                                      List<Food> otherFoods, Food previousFood) {
-        FoodPosition position = findFoodPosition(NormalFood.SIZE, worldWidth, groundY, platforms,
-                player, obstacles, otherFoods, previousFood);
-        return new NormalFood(position.x(), position.y());
+    public Optional<NormalFood> spawnNormalFood(double worldWidth, double groundY,
+                                                 List<Platform> platforms, GameObject player,
+                                                 List<Obstacle> obstacles, List<Food> otherFoods,
+                                                 Food previousFood) {
+        return findFoodPosition(NormalFood.SIZE, worldWidth, groundY, platforms, player, obstacles,
+                otherFoods, previousFood).map(position -> new NormalFood(position.x(), position.y()));
     }
 
-    private GoldenFood createGoldenFood(double worldWidth, double groundY, List<Platform> platforms,
-                                        GameObject player, List<Obstacle> obstacles,
-                                        List<Food> existingFoods) {
-        FoodPosition position = findFoodPosition(GoldenFood.SIZE, worldWidth, groundY, platforms,
-                player, obstacles, existingFoods, null);
-        return new GoldenFood(position.x(), position.y());
+    private Optional<GoldenFood> createGoldenFood(double worldWidth, double groundY,
+                                                   List<Platform> platforms, GameObject player,
+                                                   List<Obstacle> obstacles,
+                                                   List<Food> existingFoods) {
+        return findFoodPosition(GoldenFood.SIZE, worldWidth, groundY, platforms, player, obstacles,
+                existingFoods, null).map(position -> new GoldenFood(position.x(), position.y()));
     }
 
-    private FoodPosition findFoodPosition(double size, double worldWidth, double groundY,
-                                          List<Platform> platforms, GameObject player,
-                                          List<Obstacle> obstacles, List<Food> existingFoods,
-                                          Food previousFood) {
+    private Optional<FoodPosition> findFoodPosition(double size, double worldWidth, double groundY,
+                                                     List<Platform> platforms, GameObject player,
+                                                     List<Obstacle> obstacles,
+                                                     List<Food> existingFoods,
+                                                     Food previousFood) {
         for (int attempt = 0; attempt < 16; attempt++) {
             FoodPosition position = randomFoodPosition(size, worldWidth, groundY, platforms);
             if (isSafeFoodPosition(position, size, player, obstacles, existingFoods, previousFood)) {
-                return position;
+                return Optional.of(position);
             }
         }
 
@@ -130,14 +132,13 @@ public final class SpawnManager {
                 FoodPosition position = foodPositionOnSupport(size, worldWidth, groundY, platforms,
                         supportIndex, ratio);
                 if (isSafeFoodPosition(position, size, player, obstacles, existingFoods, previousFood)) {
-                    return position;
+                    return Optional.of(position);
                 }
             }
         }
 
-        // A standard-sized game area always finds a safe point above. This final position is still
-        // inside the playable floor support and avoids an exact previous-food duplicate where possible.
-        return foodPositionOnSupport(size, worldWidth, groundY, platforms, platforms.size(), 0.5);
+        // Do not bypass the player, obstacle, food, or previous-food checks if every candidate fails.
+        return Optional.empty();
     }
 
     private FoodPosition randomFoodPosition(double size, double worldWidth, double groundY,

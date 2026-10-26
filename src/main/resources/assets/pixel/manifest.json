@@ -1,9 +1,37 @@
 {
   "schemaVersion": 1,
-  "status": "selection-blocked",
-  "generatedAt": "2026-10-25",
-  "runtimeAssets": [],
-  "summary": "No third-party asset has been imported into the runtime classpath for the Cozy Pixel Art prototype. The inspected candidates are verified below, but none supplies a coherent cozy side-view room, cat state set, food, and household-hazard family. They are deliberately not mixed into a prototype.",
+  "status": "partial-runtime-integration",
+  "generatedAt": "2026-10-26",
+  "runtimeAssets": [
+    {
+      "role": "cozy room gameplay background",
+      "resourcePath": "/assets/pixel/world/cozy-room.png",
+      "provenance": {
+        "creator": "OpenAI image generation tool",
+        "createdAt": "2026-10-26",
+        "referenceMaterials": [
+          "design/concept-game-assets.png",
+          "design/concept-cozy-pixel-art.png"
+        ],
+        "sourceOutputFilename": "exec-e3491e40-f374-4063-a6d6-8051cf176252.png"
+      },
+      "licensingStatus": "No licence was supplied with the generated output; this manifest makes no licence assertion.",
+      "sourceDimensions": "1619x972 px",
+      "runtimeDimensions": "900x540 px",
+      "modifications": "Resized with nearest-neighbor sampling to the required runtime dimensions.",
+      "gameUse": "Opaque room layer drawn behind platforms, food, obstacles, and the cat.",
+      "contentExclusions": [
+        "cat",
+        "collectibles",
+        "hazards",
+        "HUD",
+        "buttons",
+        "labels",
+        "text"
+      ]
+    }
+  ],
+  "summary": "A standalone generated cozy-room background is loaded at runtime. The inspected third-party candidates remain unselected because none provides a coherent cozy side-view room, cat state set, food, and household-hazard family.",
   "verifiedCandidates": [
     {
       "publisher": "Kenney",
