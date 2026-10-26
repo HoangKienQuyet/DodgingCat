@@ -10,7 +10,6 @@ import com.dodgingcat.entity.PaperPlane;
 import com.dodgingcat.entity.Platform;
 import com.dodgingcat.entity.RobotVacuum;
 import com.dodgingcat.entity.RollingBall;
-import com.dodgingcat.entity.Yoyo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -24,9 +23,6 @@ public final class SpawnManager {
     public static final double FOOD_SPAWN_CLEARANCE = 52;
     private static final double FALLING_POT_SPEED = 165;
     private static final double PAPER_PLANE_SPEED = 190;
-    private static final double YOYO_SPEED = 140;
-    private static final double YOYO_AMPLITUDE = 26;
-    private static final double YOYO_ANGULAR_SPEED = Math.PI * 1.5;
     private static final double VACUUM_SPEED = 115;
     private static final double ROLLING_BALL_SPEED = 220;
     public static final double PLAYER_SPAWN_CLEARANCE = 120;
@@ -200,12 +196,11 @@ public final class SpawnManager {
     }
 
     private Obstacle createObstacle(double worldWidth, double groundY, GameObject player) {
-        return switch (random.nextInt(5)) {
+        return switch (random.nextInt(4)) {
             case 0 -> new FallingFlowerPot(selectSafeFallingPotX(worldWidth, player), -42,
                     FALLING_POT_SPEED);
             case 1 -> createPaperPlane(worldWidth, groundY);
-            case 2 -> createYoyo(worldWidth, groundY);
-            case 3 -> {
+            case 2 -> {
                 boolean startsLeft = random.nextBoolean();
                 double x = startsLeft ? -54 : worldWidth;
                 double direction = startsLeft ? 1 : -1;
@@ -221,15 +216,6 @@ public final class SpawnManager {
         double direction = startsLeft ? 1 : -1;
         double y = groundY - random.nextDouble(120, 220);
         return new PaperPlane(x, y, PAPER_PLANE_SPEED, direction);
-    }
-
-    private Yoyo createYoyo(double worldWidth, double groundY) {
-        boolean startsLeft = random.nextBoolean();
-        double x = startsLeft ? -Yoyo.SIZE - 12 : worldWidth + 12;
-        double direction = startsLeft ? 1 : -1;
-        double baseY = groundY - random.nextDouble(155, 255);
-        return new Yoyo(x, baseY, YOYO_SPEED, direction, YOYO_AMPLITUDE,
-                YOYO_ANGULAR_SPEED, random.nextDouble(0, Math.PI * 2));
     }
 
     private double selectSafeFallingPotX(double worldWidth, GameObject player) {

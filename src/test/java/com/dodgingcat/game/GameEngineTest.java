@@ -159,6 +159,11 @@ class GameEngineTest {
 
     private static final class GoldenFoodRandom extends SafeFoodRandom {
         @Override
+        public int nextInt(int bound) {
+            return 0;
+        }
+
+        @Override
         public double nextDouble() {
             return 0;
         }

@@ -13,6 +13,8 @@ public final class Cat extends GameObject {
 
     private double verticalVelocity;
     private boolean grounded = true;
+    private int facingDirection = 1;
+    private boolean movingHorizontally;
 
     public Cat(double x, double groundY) {
         super(x, groundY - HEIGHT, WIDTH, HEIGHT);
@@ -21,6 +23,10 @@ public final class Cat extends GameObject {
     public void update(double deltaSeconds, boolean movingLeft, boolean movingRight,
                        double worldWidth, double groundY, List<Platform> platforms) {
         double direction = (movingRight ? 1 : 0) - (movingLeft ? 1 : 0);
+        movingHorizontally = direction != 0;
+        if (movingHorizontally) {
+            facingDirection = direction > 0 ? 1 : -1;
+        }
         double nextX = getX() + direction * MOVE_SPEED * deltaSeconds;
         setX(Math.max(0, Math.min(worldWidth - getWidth(), nextX)));
 
@@ -70,5 +76,18 @@ public final class Cat extends GameObject {
 
     public boolean isGrounded() {
         return grounded;
+    }
+
+    /** Rendering metadata only; it does not participate in collision or movement decisions. */
+    public boolean isMovingHorizontally() {
+        return movingHorizontally;
+    }
+
+    public boolean isRising() {
+        return verticalVelocity < 0;
+    }
+
+    public int getFacingDirection() {
+        return facingDirection;
     }
 }

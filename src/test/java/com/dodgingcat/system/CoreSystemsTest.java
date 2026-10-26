@@ -6,12 +6,14 @@ import com.dodgingcat.entity.Food;
 import com.dodgingcat.entity.GameObject;
 import com.dodgingcat.entity.GoldenFood;
 import com.dodgingcat.entity.NormalFood;
+import com.dodgingcat.entity.ObstacleKind;
 import com.dodgingcat.entity.PaperPlane;
 import com.dodgingcat.entity.Platform;
 import com.dodgingcat.entity.RobotVacuum;
-import com.dodgingcat.entity.Yoyo;
+import com.dodgingcat.entity.RollingBall;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -58,28 +60,20 @@ class CoreSystemsTest {
     }
 
     @Test
-    void yoyoOscillatesWithinItsConfiguredVerticalRange() {
-        Yoyo yoyo = new Yoyo(400, 200, 100, -1, 30, Math.PI * 2, 0);
-
-        yoyo.update(0.5, 900, 0.25, 1);
-
-        assertEquals(350, yoyo.getX(), 0.001);
-        assertEquals(230, yoyo.getY(), 0.001);
-
-        for (double time = 0; time <= 2; time += 0.1) {
-            yoyo.update(0.1, 900, time, 1);
-            assertTrue(yoyo.getY() >= 170 && yoyo.getY() <= 230);
-        }
-    }
-
-    @Test
-    void paperPlaneAndYoyoUseTheSameLethalCollisionRuleAsOtherHazards() {
+    void eachRemainingHazardUsesTheSameLethalCollisionRule() {
         CollisionDetector detector = new CollisionDetector();
         Cat cat = new Cat(100, 500);
 
         assertTrue(detector.intersects(cat, new PaperPlane(105, 460, 120, -1)));
-        assertTrue(detector.intersects(cat,
-                new Yoyo(100, 445, 100, -1, 20, Math.PI, 0)));
+        assertTrue(detector.intersects(cat, new RobotVacuum(100, 460, 115, 1)));
+        assertTrue(detector.intersects(cat, new RollingBall(110, 460, 220)));
+    }
+
+    @Test
+    void obstacleCatalogContainsExactlyTheFourSupportedHazardTypes() {
+        assertEquals(Set.of(ObstacleKind.FLOWER_POT, ObstacleKind.PAPER_PLANE,
+                        ObstacleKind.ROBOT_VACUUM, ObstacleKind.ROLLING_BALL),
+                Set.of(ObstacleKind.values()));
     }
 
     @Test

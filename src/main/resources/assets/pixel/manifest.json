@@ -1,0 +1,76 @@
+{
+  "schemaVersion": 1,
+  "status": "selection-blocked",
+  "generatedAt": "2026-10-25",
+  "runtimeAssets": [],
+  "summary": "No third-party asset has been imported into the runtime classpath for the Cozy Pixel Art prototype. The inspected candidates are verified below, but none supplies a coherent cozy side-view room, cat state set, food, and household-hazard family. They are deliberately not mixed into a prototype.",
+  "verifiedCandidates": [
+    {
+      "publisher": "Kenney",
+      "sourcePage": "https://kenney.nl/assets/pixel-platformer",
+      "downloadUrl": "https://kenney.nl/media/pages/assets/pixel-platformer/33bb4921eb-1696667883/kenney_pixel-platformer.zip",
+      "archiveFilename": "kenney_pixel-platformer.zip",
+      "archiveSha256": "D01A196DBE3CC964E00D83BA3B987DF62F332DC9260C9F941B4FBCC9047130F4",
+      "license": "CC0-1.0",
+      "licenseEvidence": "License.txt in the inspected archive; publisher page also identifies Creative Commons CC0.",
+      "inspectedFiles": [
+        "Tilemap/tilemap.png",
+        "Tilemap/tilemap-backgrounds.png",
+        "Tilemap/tilemap-characters.png",
+        "Tiles/Backgrounds/tile_0000.png",
+        "Tiles/Characters/tile_0000.png"
+      ],
+      "usableFor": ["generic platform tiles", "generic backgrounds", "robots", "generic UI-independent pixel props"],
+      "notSelectedBecause": "Its 18px/24px tiles depict a bright generic platformer, not a warm room. It has no cat player, cozy furniture composition, paper plane, vacuum, or rolling-ball hazard family."
+    },
+    {
+      "publisher": "Kenney",
+      "sourcePage": "https://kenney.nl/assets/pixel-pack",
+      "downloadUrl": "https://kenney.nl/media/pages/assets/pixel-pack/fe80bed6c3-1677699251/pixel-pack.zip",
+      "archiveFilename": "pixel-pack.zip",
+      "archiveSha256": "8A147F84D25CD3D2192837D9418822C2A61F889FC4F3A05F03230E7E2046944E",
+      "license": "CC0-1.0",
+      "licenseEvidence": "License.txt in the inspected archive; publisher page also identifies Creative Commons CC0.",
+      "inspectedFiles": ["Preview.png", "PNG/black01.png", "PNG/white01.png", "Spritesheet/pixelSpritesheet.png"],
+      "usableFor": ["abstract monochrome pixel primitives"],
+      "notSelectedBecause": "The pack is intentionally monochrome primitive artwork and cannot provide the cozy, colorful presentation direction."
+    },
+    {
+      "publisher": "Kenney / Kenney Vleugels, with help by Lynn Evers",
+      "sourcePage": "https://kenney.nl/assets/pixel-ui-pack",
+      "downloadUrl": "https://kenney.nl/media/pages/assets/pixel-ui-pack/821e760f21-1677661508/kenney_pixel-ui-pack.zip",
+      "archiveFilename": "kenney_pixel-ui-pack.zip",
+      "archiveSha256": "B76F2F60F2BE76EB8E66511038FA4D48FAEC11E638316FA37D06084878CDF0C7",
+      "license": "CC0-1.0",
+      "licenseEvidence": "License.txt in the inspected archive; publisher page also identifies Creative Commons CC0.",
+      "inspectedFiles": ["9-Slice/Colored/blue.png", "9-Slice/Colored/green.png", "9-Slice/Outline/blue.png", "Spritesheet/UIpackSheet_transparent.png"],
+      "usableFor": ["optional pixel UI frame research"],
+      "notSelectedBecause": "It is UI-only and its older bright UI treatment does not match the existing navy/cream design without a deliberate styling pass."
+    },
+    {
+      "author": "alizard",
+      "sourcePage": "https://opengameart.org/content/pixel-cat-0",
+      "downloadUrl": "https://opengameart.org/sites/default/files/cat_run.png",
+      "filename": "cat_run.png",
+      "sha256": "8038394AB76FEC0D6E10EB179AD26D9D7093BA1E913D8F8106626F0AA5E24EC6",
+      "license": "CC0-1.0",
+      "licenseEvidence": "The original OpenGameArt page identifies the asset as CC0 and says attribution is not needed.",
+      "sourceDimensions": "330x66 px; five horizontal 66x66 run frames",
+      "usableFor": ["orange cat run-cycle study"],
+      "notSelectedBecause": "Only a run cycle is supplied. There is no verified idle, jump, or fall frame, and the 66px character style is not paired with a compatible cozy side-view environment in the inspected candidates."
+    }
+  ],
+  "requirementsStillUnfilled": [
+    "cohesive warm side-view room background with window, bookcase, plants, sofa, and wooden floor",
+    "cat idle, run, jump, and fall frame set in the same style as the environment",
+    "normal and golden food collectibles in that visual family",
+    "flower pot, paper plane, robot vacuum, and rolling-ball hazard images in that visual family",
+    "pixel UI panels and buttons matched to the navy/cream screen design"
+  ],
+  "requiredProvenanceBeforeImport": [
+    "Download only from the original publisher or author page.",
+    "Inspect the actual payload and bundled licence before choosing a file.",
+    "Record exact source filename, source URL, author, licence, modifications, display scale, and intended use.",
+    "Copy the applicable licence text when a selected asset requires it or when retaining it is useful provenance."
+  ]
+}
