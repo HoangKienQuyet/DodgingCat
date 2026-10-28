@@ -1,4 +1,4 @@
-# Dodging Cat (Phiên Bản Antigravity v1.2)
+# Dodging Cat
 
 > **Bản tài liệu làm việc để cả nhóm rà soát.** Các tài liệu gameplay và hiệu năng được dẫn bên dưới phản ánh mã nguồn hiện tại; những phần mô tả khác cần được đối chiếu trước khi nộp.
 
@@ -18,7 +18,7 @@ Dodging Cat là tựa game **2D Action Survival Platformer** được phát tri�
 
 | Hạng mục | Chi tiết |
 | :--- | :--- |
-| **Tên Dự Án** | Dodging Cat (Antigravity Version) |
+| **Tên Dự Án** | Dodging Cat|
 | **Nhóm** | TADQ |
 | **Môn Học** | Phát triển Phần mềm bằng Java (Năm học 2026–2027) |
 | **Giảng Viên Hướng Dẫn** | Ngô Văn Quyền |
