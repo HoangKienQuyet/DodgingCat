@@ -1,0 +1,33 @@
+Bundled components and original distribution/source locations:
+
+OpenJDK 25 / Eclipse Temurin: https://adoptium.net/
+The linked runtime retains its module-specific legal notices under runtime/legal.
+
+OpenJFX 25: https://openjfx.io/ and https://github.com/openjdk/jfx/tree/jfx25
+License and third-party notices are copied under licenses/javafx.
+The Windows native JavaFX libraries remain in their original Maven artifacts.
+
+Gson 2.13.2: https://github.com/google/gson
+Apache License 2.0 is included under licenses/gson-LICENSE.
+
+libwebp 1.6.0: https://developers.google.com/speed/webp/download
+The bundled dwebp decoder is used only for offline first-launch preparation.
+COPYING, PATENTS and AUTHORS are included under licenses/webp.
+Images use lossless -z 6 -exact encoding or retain the original PNG when smaller.
+ARGB pixel hashes are checked after reconstruction. No resizing is used.
+
+JLayer 1.0.1 (JavaZOOM): https://sourceforge.net/projects/javalayer/
+MP3 SFX decoder, licensed under LGPL 2.1 or later. The separate replaceable
+app/jlayer.jar retains its license notices. Corresponding source is included
+under licenses/jlayer-1.0.1-sources.jar.
+
+7zr 26.05: https://www.7-zip.org/download.html
+The reduced 7zr executable identifies itself as public domain.
+The build-only 7za utility is not part of the shipped runtime.
+
+WavPack 5.9.0: https://www.wavpack.com/ and https://github.com/dbry/WavPack
+The bundled wvunpack decoder restores original WAV files byte for byte.
+The BSD license is included under licenses/WavPack-license.txt.
+No lossy/hybrid mode is used. MP3 files are retained unchanged.
+
+Existing game artwork/music credits and generation notes are retained in source.
