@@ -1,34 +1,43 @@
-# Image and Sprite Asset Guide
+# Image and sprite asset guide
 
-The game supports image assets with JavaFX Canvas fallbacks. Kitchen and Ginger were the original art pilot. Map backgrounds, map-specific platforms, collectibles, buff icons, and universal cannon/laser warning sprites are integrated. Map-specific falling-object sprites can still fall back to code-drawn art until their individual assets are supplied.
+[Documentation index](../../../../../docs/README.md) · [English README](../../../../../README.md) · [README tiếng Việt](../../../../../README_vi.md) · [Audio guide](../audio/README.md)
+
+The current Java2D and optional JavaFX renderers share [AssetManager](../../../java/com/dodgingcat/ui/AssetManager.java) and [GameRenderer](../../../java/com/dodgingcat/ui/GameRenderer.java). All five backgrounds, 15 skin sheets, five map hazard sheets, five platforms, five buff icons and normal/legendary currency art are included. Missing falling-object art can use code fallbacks; characters deliberately wait for their sheet instead of drawing a procedural cat.
 
 ```text
-assets/images/
-├── backgrounds/   <map-id>.png (original-resolution source, used at every aspect ratio)
-├── characters/    <skin-id>_sheet.png
-├── hazards/       warning_sign.png, cannonball.png, pendulum.png, *_hazards.png
-├── buffs/         heart.png, bomb.png, shield.png, invincibility.png, double_score.png
-├── currency/      fish.png, fish_can.png
-├── platforms/     kitchen_counter.png, <map-id>_platform.png
-└── ui/            title_dodging_cat.png, button_plaque.png, team_tadq.png, art_glyphs.png
+backgrounds/   kitchen, living_room, bedroom, garden, rooftop .png
+characters/    <skin-id>_sheet.png (6 columns × 4 rows)
+hazards/       <map-id>_hazards.png (2 columns × 3 rows), warning_sign,
+               cannonball, pendulum, pendulum_chain .png
+platforms/     kitchen_counter.png, <other-map-id>_platform.png
+buffs/         heart, bomb, shield, invincibility, double_score .png
+currency/      fish.png, fish_can.png; skins/<cyber|ghost|santa>_<fish|can>.png
+ui/            title_dodging_cat, team_tadq, button_plaque,
+               button_plaque_hover, art_glyphs .png; art_glyphs.txt; countdown/
 ```
 
-The renderer keeps a uniform scale and adapts the logical playfield width to the window, so wide displays gain more playable area without stretching sprites. Every viewport uses the same original map PNG with a floor-aligned cover crop. The unused `_wide` copies were removed during submission packaging; this does not change the map artwork drawn by the game. Each map shares the Kitchen floor collider baseline at 85.55% of logical height. Living Room is a morning scene, Bedroom and Rooftop are nighttime scenes, and Kitchen and Garden remain in late-afternoon light.
+## Backgrounds and platforms
 
-Each map has its own elevated platform artwork: Kitchen counter, Living Room sofa cushion, Bedroom pillow, Garden stone-and-grass ledge, and Rooftop brickwork. The assets are transparent PNG cutouts. The renderer trims transparent padding for the four new platform images; warning cracks and break particles remain code-drawn.
+The renderer uses each original `<map>.png` at all aspect ratios with a floor-aligned cover crop. Logical height is 640, width follows viewport ratio, and the floor is at 85.55% of logical height for every map. Native display pixels and DPI determine render scale; no default 720p limit or separate `*_wide` source is used. Cropping to cover may hide scene edges; sprites keep uniform scale.
 
-Every character skin uses a 6-column × 4-row sheet. Rows are idle, run, jump ascent, and falling. Skin cards and menu previews cycle only the idle row. Gameplay selects run, jump, and falling rows from the player's movement state. The renderer waits for the sheet to load rather than drawing a procedural cat.
+Kitchen uses kitchen_counter.png with its established source crop; Living Room/Bedroom/Garden/Rooftop use their own trimmed platform art. Platform collision and crumble rules are in [gameplay parameters](../../../../../docs/gameplay-thong-so.md), separate from image bounds. The floor is not a crumbling platform.
 
-The illustrated title and logo are authored PNG assets; their reference images and ImageGen prompts are recorded in `ui/BRANDING_PROMPTS.md`. `java tools/GenerateUiArt.java` regenerates only the button plaque and raster glyph atlas, preserving the title and logo. Runtime UI labels use `art_glyphs.png` and `art_glyphs.txt` instead of drawing a system font. Countdown labels are separate high-resolution PNGs regenerated with `java tools/GenerateCountdownArt.java`.
+## Character sheets and previews
 
-`platforms/kitchen_counter.png` is the Kitchen ledge image and keeps its established source crop. Every elevated platform is eligible for the crumble schedule, with at most two collapsed at once; the floor never crumbles.
+Every skin uses an exact transparent 6×4 grid: row 0 idle, row 1 run, row 2 ascent, row 3 falling. Keep the same canvas/cell sizes and safe gutters when replacing art. Gameplay chooses movement rows; cards use six isolated idle frames fitted and centered in the preview box. Main menu and loadout stage do not draw a cat mascot. Legendary overlays/trails and defeated ghost/tombstone effects are code-drawn additions to sprite art.
 
-`buffs/` contains five transparent pickup images used directly by the renderer. `currency/fish.png` and `currency/fish_can.png` are transparent pickup images; the can still represents the existing five-fish value.
+Skin IDs/rarities are listed in [shop-and-loadout](../../../../../docs/shop-and-loadout.md). Names such as Neon/Spirit are display names; filenames remain cyber_sheet.png and ghost_sheet.png. Replacing a PNG with the same filename does not require a catalog rename, but a running process caches images and must be restarted.
 
-Use transparent PNGs for characters, hazards, buffs, pickups, and platform art. Backgrounds are full-scene images for their supported aspect ratios, while platforms and individual objects are resized to their in-game bounds.
+## Hazard grids and pickups
 
-Universal hazard images: `warning_sign.png`, `cannonball.png`, and `pendulum.png`. Laser warning lines and particle/screen-shake effects are still drawn by code.
+Each map hazard sheet is 2×3; cells 0–4 in row-major order match the five hazard IDs for that map in [gameplay](../../../../../docs/gameplay-thong-so.md); cell 5 is unused. Alpha bounds are trimmed per frame. warning_sign/cannonball/pendulum/pendulum_chain are universal assets. Laser lines/beams can be drawn by code; optional laser_beam_horizontal.png/laser_beam_vertical.png are referenced by the loader but are not currently supplied files. All five map sheets are supplied, so fallback code is not evidence that their artwork is unfinished.
 
-Map-specific hazard IDs are `knife`, `frying_pan`, `rolling_pin`, `salt_shaker`, `blender`, `plant_pot`, `remote_control`, `book`, `cushion`, `lamp`, `alarm_clock`, `pillow`, `slipper`, `mirror_shard`, `toy_block`, `apple`, `bee_hive`, `trowel`, `watermelon`, `acorn`, `brick`, `satellite_dish`, `antenna`, `weather_vane`, and `lightning`.
+Buffs use transparent PNG icons. fish.png is +1, fish_can.png is +5. Legendary currency skins change the picture only; their selection/value rules are in gameplay parameters. Particles, warning lines, platform cracks, panel geometry and screen shake still use drawing code.
 
-Each `*_hazards.png` is a 2-column × 3-row transparent spritesheet for that map's five falling hazard types; the sixth cell is intentionally empty. The renderer uses procedural drawing when an optional file is missing. Keep original asset packs and license/credit information in project documentation; do not assume that “free download” means the same reuse terms for every pack.
+## UI lettering and branding
+
+Runtime labels go through ArtText using art_glyphs.png and art_glyphs.txt. Text is assembled into cached raster strings, fitted to max width and drawn as images. JavaFX Font objects supply requested size; glyphs are not rendered from the machine's system fonts during gameplay. These are shared button images with raster text layered on top, **not a separate pre-lettered image for every button**. Hover swaps button_plaque_hover.png, whose alpha follows the base asset.
+
+Countdown uses standalone 3/2/1 and go_en/go_vi PNGs. [GenerateUiArt](../../../../../tools/GenerateUiArt.java) bakes the glyph atlas/button images using installed Georgia/Arial at generation time; [GenerateCountdownArt](../../../../../tools/GenerateCountdownArt.java) generates the countdown. Run generators only when intentionally replacing their output; they do not regenerate the illustrated title/logo. Retain transparent alpha and inspect English/Vietnamese text after changing lettering or translations.
+
+Title and team emblem are title_dodging_cat.png and team_tadq.png (TADQ). [BRANDING_PROMPTS.md](ui/BRANDING_PROMPTS.md) records the ImageGen prompts and output sizes; it is provenance, not gameplay configuration. Preserve source/creator/license records for assets; the repository does not establish a blanket redistribution license for all artwork. Source images are decoded at original resolution; native-sized draw caches are derived for rendering, not replacements for source files.

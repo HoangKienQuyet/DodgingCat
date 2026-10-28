@@ -1,83 +1,48 @@
-# Windows x64 portable
+# Windows x64 portable và đóng gói bài nộp
 
-## Bản source trực tiếp dùng cho bài nộp
+[Mục lục](README.md) · [README English](../README.md) · [README tiếng Việt](../README_vi.md) · [Công cụ đóng gói](../tools/README.md)
 
-`DodgingCat-source-portable-Windows-x64.zip` có `src`, `pom.xml`, README và
-asset gốc ngay ở cấp đầu. Giải nén ZIP, mở `Run.cmd` để chơi. Lần đầu script
-giải nén `support/platform.7z` chứa Java 25, JavaFX và thư viện; không cần mạng, Java,
-JDK, Maven hay quyền quản trị trên máy demo. Không mở game ngay trong ZIP viewer.
+## Bản source trực tiếp hiện dùng
 
-Khi cần sửa code ở buổi vấn đáp, mở `src/main/java`, lưu thay đổi, đóng game,
-chạy `Build.cmd`, rồi mở lại `Run.cmd`. Build dùng compiler đi kèm và biên dịch
-main source; Maven/JUnit tests có trong project nhưng cần môi trường Maven/JUnit
-riêng nếu muốn chạy toàn bộ test. File `README.txt` trong ZIP cũng ghi
-đầy đủ hướng dẫn. ZIP này giữ nguyên PNG, WAV, MP3 trong `src/main/resources`;
-không thay độ phân giải hoặc chuyển mã asset.
+[build-direct-portable.ps1](../build-direct-portable.ps1) tạo `DodgingCat-source-portable-Windows-x64.zip`. Sau khi giải nén, thư mục `DodgingCat/` có:
 
-Tạo lại gói sau khi sửa project bằng `./build-direct-portable.ps1` trên máy có
-JDK 25, Maven và dependencies đã cache. Script chỉ tạo output mới, không ghi
-đè gói đã phát hành. Không đưa `target`, `.git`, IDE cache hay `deliverables`
-vào ZIP. Sau khi thêm report/slides, kiểm tra lại một file ZIP cuối cùng dưới
-100.000.000 byte theo giới hạn LMS.
+```text
+Run.cmd       chạy game bằng runtime đi kèm
+Build.cmd     biên dịch lại main source bằng compiler đi kèm
+README.txt    hướng dẫn nhanh riêng cho portable
+README.md / README_vi.md
+pom.xml
+src/          main source, tests và PNG/WAV/MP3 gốc
+docs/         tài liệu
+support/      archive runtime/dependencies, helper và license
+```
 
-## Gói lossless cũ
+1. Giải nén toàn bộ vào thư mục được ghi; không chạy trong ZIP viewer.
+2. Mở `Run.cmd`. Lần đầu kiểm tra hash và giải nén Java 25/JavaFX/Gson/JLayer từ `support/platform.7z` vào `support/runtime` và `support/app`.
+3. Khi interview cần sửa code, đóng game, sửa `src/main/java`, chạy `Build.cmd`, rồi `Run.cmd`. Source resource đọc trực tiếp từ `src/main/resources`.
 
-Gói `DodgingCat-Windows-x64-portable.zip` chứa runtime Java 25, JavaFX native,
-Gson và source. Bản **buildable** có thêm compiler Java để build offline;
-bản **demo** gọn hơn, chỉ dành cho việc chạy game và xem source/tests.
-Máy demo không cần cài Java, JDK, Maven hoặc 7-Zip. Chỉ dành cho Windows 64-bit.
+Không cần cài Java/JDK/Maven/7-Zip, mạng hoặc quyền admin trên máy demo. Chỉ hỗ trợ Windows x64, cần cho phép chạy executable và PowerShell. Compiler đi kèm build main source offline, không chạy JUnit; muốn chạy test Maven cần Maven và dependencies/JUnit riêng. `Build.cmd` giữ JAR cũ trong `support/build/<id>/previous-game-code.jar`.
 
-## Chạy tại máy demo
+Đường dẫn có ký tự ngoài ASCII khiến helper tạo cache vật lý trong `%LOCALAPPDATA%` hoặc `%PUBLIC%/DodgingCatPortableRuntime/<SID>/<hash>`. Source được đồng bộ trước mỗi lần prepare/build; save luôn ở `data/profile.json` cạnh bản gốc. Vị trí runtime ghi trong `support/portable-root.txt`. Nên dùng đường dẫn ASCII như `C:/Demo/DodgingCat`; chừa khoảng 500 MB ổ trống, nhiều hơn nếu có nhiều bản/cache/build. Không xóa `src` hoặc `support` vì game cần assets/runtime ở đó.
 
-1. Giải nén toàn bộ ZIP ra thư mục được phép ghi; không chạy trong cửa sổ xem ZIP.
-2. Mở `Run.cmd` và đợi bước chuẩn bị lần đầu hoàn tất. Bước này giải nén runtime,
-   khôi phục PNG/WAV gốc và kiểm tra dữ liệu; không tải gì từ mạng.
-3. Những lần sau tiếp tục mở `Run.cmd`. F11 đổi fullscreen, F10 xem FPS.
-4. Giữ nguyên cả thư mục. Game dùng chung assets trong `DodgingCat/source`,
-   không được xóa thư mục source hoặc runtime.
+## Tạo lại gói
 
-Dữ liệu lưu tại `DodgingCat/data/profile.json` cạnh bản portable, không dùng
-profile của bản phát triển trên máy cá nhân. F9 lần hai reset profile này.
+Máy đóng gói cần JDK 25 có `jlink`, Maven trên PATH và dependencies Windows đã cache trong repository Maven. Chạy ở repository root:
 
-Nên dùng đường dẫn ASCII, ví dụ `C:\Demo\DodgingCat-Windows-x64`. Nếu đường dẫn
-có dấu tiếng Việt, script tạo bản cache vật lý tại `%LOCALAPPDATA%` hoặc
-`%PUBLIC%`/`DodgingCatPortableRuntime` để tránh lỗi native-library của Java trên
-Windows. Source sửa ở bản gốc sẽ được đồng bộ sang cache trước khi build;
-profile vẫn ở bản gốc. Cần khoảng 400 MB ổ trống với đường dẫn ASCII, hoặc
-700 MB khi cần cache. Không cần quyền quản trị; máy trường vẫn phải cho phép
-chạy chương trình và PowerShell cục bộ.
+```powershell
+.\build-direct-portable.ps1
+```
 
-## Sửa code khi interview
+Có thể truyền `-OutputDirectory '<thư mục mới>'` và `-MavenRepository '<.m2/repository>'`. Output phải chưa tồn tại. Script compile main với `-DskipTests`; chạy `mvn test` riêng trước phát hành. Script dùng `tools/portable-direct/7zr.exe`, jlink runtime kèm javac/jar, rồi ZIP source và runtime nén. Không resize hoặc chuyển mã PNG/WAV/MP3. Source JDK/compiler/third-party notices được giữ theo template license đi kèm.
 
-Với bản buildable, mở `Open-source.cmd`, sửa Java trong thư mục vừa mở, đóng
-game rồi chạy `Build.cmd`. Script dùng `javac` và `jar` đóng gói sẵn, ghi lại
-JAR và giữ bản trước đó trong `DodgingCat/build`. Sau đó chạy `Run.cmd`.
-Bản demo không có `Build.cmd`; cần dùng bản buildable hoặc máy có JDK/Maven
-để biên dịch source.
+Build report ngoài ZIP ghi byte, SHA-256 ZIP và SHA-256 platform archive. Gói hiện tại trên máy tác giả nằm trong `deliverables/` và bị Git ignore; không coi đường dẫn artifact trên máy tác giả là file có sẵn ở clone GitHub. Sau sửa source phải build lại để JAR khớp source. Nếu chỉ cập nhật tài liệu trong ZIP, ghi lại hash/kích thước và ghi rõ kiểm chứng chạy trước đó áp dụng cho code/runtime không đổi.
 
-Build offline này biên dịch main source, không chạy Maven/JUnit. Source Maven
-và tests vẫn được kèm để phát triển theo cách thông thường. Build lại toàn bộ
-gói portable bằng `build-portable.ps1` cần JDK 25, Maven và dependencies trên máy
-đóng gói; yêu cầu đó không áp dụng cho máy chạy demo.
+## Bài nộp LMS
 
-## Giữ chất lượng và giới hạn LMS
+Giới hạn do người dùng cung cấp: **một file, 100 MB**. Dùng ngưỡng bảo thủ dưới **100.000.000 byte** cho ZIP cuối, gồm game/source portable, report và slide. ZIP game riêng chưa phải bài nộp hoàn chỉnh. Kích thước sau thêm report/slide phải đo lại; không lấy dung lượng thư mục giải nén thay dung lượng ZIP.
 
-Assets được nén lossless để vận chuyển rồi khôi phục trước khi chạy game:
-PNG được đối chiếu kích thước và SHA-256 của mọi pixel ARGB, giữ các metadata
-hiển thị; WAV được đối chiếu SHA-256 toàn file. MP3 được giữ nguyên.
-PNG đã nén tốt hơn WebP (đặc biệt PNG palette) được giữ trực tiếp để tránh tăng
-dung lượng; cache ảnh đóng gói chỉ tái sử dụng khi SHA-256 của source trùng khớp.
-Không resize, không hạ độ phân giải render hoặc decode.
+Direct-source package không chép `target`, `.git`, cache IDE hoặc các deliverable trước. Nó giữ tests vì cần source để review/debug; tests không tự chạy khi demo. Giữ giấy phép thư viện. Trước khi nộp, giải nén ZIP cuối ở thư mục mới, thử Run, sửa/build một thay đổi kiểm chứng trên bản thử riêng, kiểm tra tiếng Việt/ASCII, âm thanh và tài liệu. Quy định môn học về report/slide/interview cần đối chiếu tài liệu đề bài chính thức; đây là hướng dẫn kỹ thuật của repository.
 
-Tạo bản demo bằng `./build-portable.ps1 -DemoOnly`. Công cụ và cache build nằm
-trong `target/`, không được đưa vào ZIP. Bản demo giữ source/tests, bỏ compiler
-đi kèm để chừa dung lượng cho report và slides.
+## Công cụ legacy còn trong repo
 
-Build từ chối xuất bản ZIP từ 100.000.000 byte trở lên. Số byte và SHA-256 của
-artifact nằm trong `build-report.json` bên ngoài ZIP. Đây là gói game/source;
-báo cáo và slides chưa nằm trong đó. Khi thêm tài liệu vào một ZIP nộp LMS,
-phải đo lại tổng kích thước; không thể dựa vào kích thước gói game riêng.
-
-`Troubleshoot.cmd` kiểm tra/khôi phục assets và ghi lỗi vào `game-debug.log`.
-Log chuẩn bị ở `DodgingCat/prepare-assets.log`; nếu dùng cache, xem log trong
-cache được ghi tại `portable-root.txt`.
+[build-portable.ps1](../build-portable.ps1) và [tools/portable](../tools/portable/README.md) là phương án đóng gói lossless trước đây: source nằm dưới `DodgingCat/source`, runtime/assets cần chuẩn bị từ payload, có launcher native/Troubleshoot. `-DemoOnly` bỏ compiler nhưng vẫn giữ source. Cấu trúc và đường dẫn này khác bản direct-source ở trên; không áp dụng hướng dẫn `source/src` cho bản hiện tại. Xem lịch sử ở [history](history/README.md).

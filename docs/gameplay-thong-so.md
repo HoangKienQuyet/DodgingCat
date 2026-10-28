@@ -1,6 +1,10 @@
-# Thông số gameplay — 28/10/2026
+# Thông số gameplay
 
-Đối chiếu trực tiếp với `ProceduralGenerator`, `GenerationRules`, `GameWorld`, `Player`, `BuffType`, `FishType` và các lớp hazard. Thời gian dưới đây là giây trong simulation; pause không làm các bộ đếm này chạy tiếp. Khoảng cách/tốc độ dùng đơn vị logic của game, chiều cao sân luôn 640; fullscreen tăng chiều rộng theo tỉ lệ màn hình.
+[Mục lục](README.md) · [README English](../README.md) · [README tiếng Việt](../README_vi.md)
+
+Đối chiếu ngày 28/10/2026. [Catalog/gacha/loadout](shop-and-loadout.md) · [Kiến trúc/fairness](architecture.md)
+
+Đối chiếu trực tiếp với [ProceduralGenerator](../src/main/java/com/dodgingcat/generation/ProceduralGenerator.java), [GenerationRules](../src/main/java/com/dodgingcat/generation/GenerationRules.java), GameWorld, Player, BuffType, FishType và các lớp hazard. Thời gian dưới đây là giây trong simulation; pause không làm các bộ đếm này chạy tiếp. Khoảng cách/tốc độ dùng đơn vị logic của game, chiều cao sân luôn 640; fullscreen tăng chiều rộng theo tỉ lệ màn hình.
 
 ## Buff
 
@@ -67,10 +71,27 @@ Mỗi map có 5 vật rơi, chọn đều 20% trong nhóm vật rơi:
 
 Từ 60s bắt đầu cơ chế sập platform: đợi thêm 5s để kiểm tra lần đầu, các lần sau cách 7–12s; cảnh báo 1,5s; sập 4s rồi thử tìm vị trí hồi lại có thể tiếp cận; tối đa 2 platform sập. Có thể chậm hơn nếu chưa tìm được vị trí an toàn.
 
-## Gacha hiện tại
+## Người chơi, điểm và platform
 
-Chỉ chọn skin chưa sở hữu, không có trùng. Trọng số **mỗi skin còn lại**: Common 100, Uncommon 40, Rare 20, Legendary 7. Xác suất một rarity bằng trọng số nhân số skin còn lại, chia tổng trọng số.
+Nguồn: [Player](../src/main/java/com/dodgingcat/game/Player.java), [GameWorld](../src/main/java/com/dodgingcat/game/GameWorld.java), [Platform](../src/main/java/com/dodgingcat/game/Platform.java), [ProceduralGenerator](../src/main/java/com/dodgingcat/generation/ProceduralGenerator.java).
 
-Với tài khoản mới đã có Ginger và Tuxedo: còn 3 common, 4 uncommon, 3 rare, 3 legendary; tổng trọng số 541. Xác suất theo rarity xấp xỉ **55,45% / 29,57% / 11,09% / 3,88%**. Xác suất được tính lại sau mỗi lần mở khóa.
+| Thông số | Giá trị hiện tại |
+| --- | --- |
+| Tốc độ ngang | 260 đơn vị/s |
+| Vận tốc nhảy đầu | -520 đơn vị/s |
+| Gia tốc trọng lực / vận tốc rơi tối đa | 1200 đơn vị/s² / 750 đơn vị/s |
+| Sprite logic / hitbox hazard | 36×36 / offset (-8,-26), kích thước 52×60 |
+| Sàn | 85,55% chiều cao logic 640, không sập/không rơi xuyên |
+| Điểm thời gian | 10/s; 20/s nếu ít nhất một người sống giữ x2, không nhân lên 40 trong 2P |
+| Điểm nhặt buff | +50, không nhân đôi |
+| Khi trúng hazard | Chết nếu không khiên/miễn sát thương; không có thanh HP nhiều đòn |
+| Bệ nổi ban đầu | 4–7, bố trí 3–4 tầng; nhánh random chính cách tầng 65–95, y cao nhất ≥125, bệ rộng 135–230 |
+| Kiểm tra nối bệ | Chênh cao ≤96, khe ngang ≤82 theo heuristic; không phải mô phỏng mọi đường nhảy |
 
-`spin.wav` dài 11,312s; reel tiến theo vị trí phát thực tế và chỉ hoàn tất khi âm thanh kết thúc. Giữ ô trúng 0,55s, legendary có thêm 1,8s hội tụ/bùng hạt, sau đó hiện box kết quả và phát `congrat.wav` (4,488s). Box tự đóng sau 2s hoặc click; common/uncommon không có pháo hoa, rare có pháo hoa vàng, legendary có hiệu ứng riêng theo skin.
+GameWorld thử tối đa 250 layout random và kiểm tra phân bố ba vùng trái/giữa/phải; nếu thất bại dùng layout random fallback riêng (kích thước/khoảng tầng có thể khác bảng). Vì có fallback, không tuyên bố mọi layout đều là kết quả một bài kiểm chứng đồ thị đầy đủ. Khi bệ hồi lại, generator tìm tối đa 80 vị trí và kiểm tra mạng kết nối, phân bố, khoảng cách người chơi; chưa tìm được thì bệ có thể ở trạng thái sập lâu hơn 4s. Khi hồi thành công có 25% thử thêm nhánh, tối đa 10 bệ nổi. Lịch trigger giới hạn theo số bệ đang collapsed dưới 2; warning chưa được tính là collapsed.
+
+Danh hiệu sinh tồn theo các mốc <20, <60, <120, <200, ≥200s: Noob Kitten, Quick Paws, Acrobatic Feline, Shadow Dodger, King of Dodge; 2P dùng biến thể số nhiều trong I18n. Điểm/tiền thuộc chung một lượt, không tách cho từng người. Quy tắc kết thúc/lưu nằm ở [running-and-testing](running-and-testing.md).
+
+## Gacha
+
+Giá, catalog đủ 15 skin, xác suất cập nhật sau mỗi lần mở và trình tự spin/audio/reveal nằm ở [shop-and-loadout.md](shop-and-loadout.md), tránh duy trì hai bảng xác suất riêng. Gacha không đổi các xác suất spawn buff/tiền/hazard ở trên.

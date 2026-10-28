@@ -2,7 +2,7 @@ DODGING CAT - WINDOWS X64 PORTABLE
 
 1. Extract the entire outer ZIP to a writable folder.
 2. Double-click Run.cmd. No installed Java, JDK, Maven, 7-Zip or Internet is needed.
-3. First launch prepares the bundled runtime, full-resolution PNGs and original WAVs.
+3. First launch prepares the bundled runtime, full-resolution PNGs and original WAV/MP3 audio.
    Wait for preparation to finish. Later launches reuse these files.
 4. Use Run.cmd for normal launches, including folders with Vietnamese names.
 

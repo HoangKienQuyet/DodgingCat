@@ -1,5 +1,9 @@
 # Baseline and submission packaging — 2026-10-28
 
+[History index](README.md) · [Current documentation](../README.md) · [Current performance](../performance.md) · [Current packaging](../portable-windows.md)
+
+> Historical record only / Hồ sơ lịch sử. Measurements, counts, paths and descriptions below belong to the experiment when recorded; they are not current configuration or guaranteed available artifacts. Current fish spawn is 4s, render is native Java2D and test counts are in the current verification guide. The old 720p/decode-192px choices and backup paths must not be used as present-day instructions.
+
 The original local workspace was backed up before packaging under
 `deliverables/baseline-20261028-161101/`. The full workspace archive is for local
 recovery only. It includes Git metadata and build/profiling files and must not be

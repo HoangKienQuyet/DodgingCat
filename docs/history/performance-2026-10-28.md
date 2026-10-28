@@ -1,5 +1,9 @@
 # Kiểm chứng UI, gacha và hiệu năng — 28/10/2026
 
+[History index](README.md) · [Current documentation](../README.md) · [Current performance](../performance.md) · [Current packaging](../portable-windows.md)
+
+> Historical record only / Hồ sơ lịch sử. Measurements, counts, paths and descriptions below belong to the experiment when recorded; they are not current configuration or guaranteed available artifacts. Current fish spawn is 4s, render is native Java2D and test counts are in the current verification guide. The old 720p/decode-192px choices and backup paths must not be used as present-day instructions.
+
 > Báo cáo lịch sử của cấu hình thử 720p. Cấu hình đó đã được bỏ theo yêu cầu tiếp theo: mặc định hiện tại render native, không upscale từ 720p. Xem [kết quả native và thay đổi buff/tiền](performance-native-2026-10-28.md).
 
 ## Kết quả và giới hạn
@@ -48,4 +52,4 @@ Bài đo FPS ghi `target/scene-frame-probe-720.txt`. Chạy riêng từng probe;
 
 UI snapshot kiểm tra cả tiếng Việt/Anh, tỉ lệ thường/rộng, hình 1920×1080 qua bộ đệm 720p, cuộn chuột 2P, dừng reel và các bước reveal của 5 giải thưởng, danh sách leaderboard có dữ liệu và tự đóng/click đóng box. Ảnh nằm trong `target/ui-preview`. Kiểm thử logic gacha bao phủ tất cả 15 skin qua 20 seed/skin, ranh giới trọng số rarity và trường hợp đã đủ bộ sưu tập.
 
-Thông số gameplay: [buff, tiền, hazard và xác suất gacha](gameplay-thong-so.md).
+Thông số gameplay: [buff, tiền, hazard và xác suất gacha](../gameplay-thong-so.md).

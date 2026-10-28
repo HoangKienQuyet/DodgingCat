@@ -1,146 +1,79 @@
-# Dodging Cat 
+# Dodging Cat
 
-> **Working project documentation for team review.** Gameplay and performance notes linked below reflect the current implementation; other descriptions may need updating before submission.
+[Tiếng Việt](README_vi.md) · [Documentation index](docs/README.md)
 
-Dodging Cat is a 2D Action Survival Platformer developed in Java (JDK 25), Maven, and JUnit 5. Desktop rendering uses core Java2D/AWT (`java.desktop`) at native display resolution, with JavaFX retained for existing image/media services and an optional comparison renderer. It features single-player survival, **Local Co-op**, loadouts, procedural platforms, hazards, buffs, fish currency, and **Fairness-Aware Procedural Generation**.
+Dodging Cat is a Java desktop survival platformer with single player and local two-player co-op. Dodge falling objects, lasers, cannonballs and swinging/orbiting weights; collect buffs and fish; unlock skins through gacha and buy additional maps.
 
-Current [gameplay values](docs/gameplay-thong-so.md) and [native rendering measurements](docs/performance-native-2026-10-28.md) supersede older descriptions below. Run with `run.cmd` or `./dev.ps1 run`; F11 switches fullscreen and F10 displays FPS.
+The default renderer is **Java2D/AWT at native pixel resolution**, paced at 60 FPS. JavaFX is still required for image/media services and the optional JavaFX renderer. This is not a JDK-only application. Build versions come from [pom.xml](pom.xml): **JDK 25**, JavaFX 25, Gson 2.13.2, JLayer 1.0.1 and JUnit 5.10.2. The Maven artifact version is 1.0.0.
 
-For a Windows demo without installed Java/Maven, use the [direct-source portable package](docs/portable-windows.md). The ZIP exposes `src` and `pom.xml` immediately and bundles an offline Java compiler. Open `Run.cmd` after extraction; use `Build.cmd` after editing source.
+## Run and test
 
----
+Run these commands from the folder containing `pom.xml`, with JDK 25 and Maven available:
 
-## 1. Project Information
-
-| Item | Details |
-| :--- | :--- |
-| **Project Name** | Dodging Cat  |
-| **Team** | TADQ |
-| **Course** | Java Software Development (Academic Year 2026–2027) |
-| **Instructor** | Ngô Văn Quyền |
-| **Team Size** | 4 members |
-| **Genre** | 2D Action Survival Platformer |
-| **Game Modes** | Single-player Survival & Local Co-op (WASD + Arrow Keys) |
-| **Main Technical Contribution** | **Fairness-Aware Procedural Generation** |
-| **Development Path** | Repository root after cloning or extracting the project |
-| **Status** | 🟡 **In Development; visual/audio assets and playtest refinement remain** |
-
-### Team Members and Contribution Record
-
-All four members built separate game prototypes. The group selected this version, developed by Tran Quang Anh, as the base for the final submission. Record any later integration, tests, documentation, or packaging work against the changes each member actually makes; the final contribution breakdown is still being prepared.
-
-| # | Student ID | Name | Current record |
-| :-: | :--- | :--- | :--- |
-| 1 | `2301040209` | **Hoang Kien Quyet** | Independent prototype; contribution to this version to be documented |
-| 2 | `2301040013` | **Tran Quang Anh** | Initial implementation of the selected game version |
-| 3 | `2301040171` | **Tran Gia Thanh** | Independent prototype; contribution to this version to be documented |
-| 4 | `2301040042` | **Nguyen Cong Doan** | Independent prototype; contribution to this version to be documented |
-
----
-
-## 2. Core Gameplay & Features
-
-**Visual/audio status:** The game uses PNG backgrounds, animated skin sheets, authored raster UI lettering, map music and gameplay/UI SFX. Source artwork and decode resolution are preserved; native-sized drawing caches avoid repeating scaling and panel painting every frame.
-
-```
-Main Menu → Pre-Game Loadout (Map & Skin) → Move / Jump / Drop-down →
-Dodge Hazards → Collect Buffs & Fishes → Survive →
-Game Over (Survival Title) → Replay / Shop
+```powershell
+mvn compile javafx:run
+mvn test
 ```
 
-### 2.1 Brotato-Style Main Menu & Mouse Support
-- **Atmospheric Visuals**: Centered animated cat standing on a spotlight stage with ambient shadow silhouettes lurking in the background.
-- **Full Desktop Mouse Controls**: Clickable buttons, hover glows, and tab navigation, alongside complete keyboard support.
-- **Fullscreen Mode**: Toggle fullscreen seamlessly with `F11` or via the Settings menu.
-- **Top Bar**: Currency balance only. Language and audio options are inside Settings.
-- **Main Menu Layout**: Single Player, Local Co-op, and Shop on the left; Leaderboard, Settings, and Quit on the right. A suspended run adds a `Resume` button.
-- **Settings & Audio Screen**: BGM volume slider, SFX volume slider, language toggle, and fullscreen toggle.
+On Windows, double-click `run.cmd` or `test.cmd`. These call `dev.ps1`, which finds an installed JDK and uses an installed Maven or downloads Maven 3.9.11 when needed. Dependencies need Internet access on the first Maven build. The helper does not install a JDK; the project requires release 25 even though an older helper error message mentions 23+.
 
-### 2.2 Pre-Game Loadout Selection Screen
-- Opens when choosing **Single Player** or **Local Co-op**.
-- Allows players to select an owned **Map** and **Skin** (P1 and P2) with live preview cards before launching the survival run.
+For a demo without installed Java or Maven, use the separately built [Windows x64 portable package](docs/portable-windows.md). Extract it fully, open `Run.cmd`, and use `Build.cmd` after editing Java source. A Git clone alone does not contain that package's runtime.
 
-### 2.3 Shop Architecture
-- Separate tabs for **Skins** and **Maps**.
-- Skin cards retain rarity styling. Map cards have no rarity labels or tiers; map prices remain unchanged.
-- Shop is strictly for purchasing; equipping is handled in the pre-game loadout.
-- Rebalanced pricing requiring dedicated gameplay runs (~20 runs per skin, maps $2\times$).
+## Play
 
-### 2.4 Dynamic Procedural Platforms
-- No more static identical platforms! Each run generates 4–7 elevated platforms across 3–4 randomized tiers, validates connected jumps, keeps the first tier within jump range of the safe floor, and spreads platforms across the play area. After 60 seconds, crumbling platforms respawn at newly randomized reachable positions; occasional extra branches can grow the layout to a maximum of 10 elevated platforms.
-- **One-Way Platforms**: Jump through from underneath ($v_y < 0$), land firmly on top ($v_y \ge 0$).
-- **Drop-Down**: Press the `Down` key while standing on any one-way platform to drop through.
-- **Crumbling Platforms (> 60s)**: At least one upper-tier platform can crumble. It shakes and cracks for 1.8s, stays collapsed for 4.0s, then respawns at a newly selected reachable location.
+The startup sequence displays the title for 2 seconds and TADQ logo for 2 seconds once rendering starts. The menu shows the last map on which a run was started, without a cat mascot. Click **1P** or **2P**, choose a map and skin in loadout, then click Start. A three-second `3 → 2 → 1 → GO` countdown precedes simulation.
 
-### 2.5 The 3 Universal Hazards + Map-Specific Hazards
-- **3 Universal Hazards** (featured on ALL maps):
-  1. **Pendulum Weight (Quả Tạ)**: Heavy iron weight oscillating on a steel chain along $\theta(t) = \theta_0 \cos(\omega t)$.
-  2. **Laser Hazard**: Available in **both Horizontal and Vertical** orientations with animated telegraph warning lines before firing!
-  3. **Cannon Hazard**: Available in **both Horizontal and Vertical** (mortar drop / upward shot) orientations with telegraph aim lines and fiery cannonballs!
-- **Map-Specific Falling Hazards**:
-  - *Kitchen*: Knife, Frying Pan, Rolling Pin, Salt Shaker, Blender.
-  - *Living Room*: Plant Pot, Remote Control, Hardcover Book, Cushion, Lamp.
-  - *Bedroom*: Twin-bell Alarm Clock, Fluffy Pillow, Slipper, Mirror Shard, Toy Block.
-  - *Garden*: Red Apple, Bee Hive, Garden Trowel, Watermelon, Acorn.
-  - *Rooftop*: Heavy Brick, Satellite Dish, TV Antenna, Weather Vane, Lightning Bolt.
+| Action | Player 1 | Player 2 |
+| --- | --- | --- |
+| Move | A / D | Left / Right |
+| Jump | W | Up |
+| Drop through elevated platforms | S | Down |
 
-### 2.6 Cat Skins & Rarities
-- **Common**: Ginger Tabby, Tuxedo, Snow White, Classic Gray (solid & two-tone coats).
-- **Uncommon**: Calico Tri-color, Siamese, Bengal Leopard (distinct breed patterns).
-- **Rare**: Cyber Neon (visor + neon circuits), Lava Tabby (magma stripes), Ghost Cat (translucent spectral wisps).
-- **Legendary**: Santa Cat (Santa hat + snowflake particles), Super Cat (fluttering red cape + hero badge), Pirate Cat (tricorn captain hat + eye patch + red bandana).
-- Full animations: walk cycle, wagging tails, eye blinks, jump squash/stretch, and accessory particle trails.
+Use the mouse for menu buttons and map selection. In 2P skin selection, P1 uses WASD + Space, P2 uses arrows + Enter; the mouse wheel scrolls the grid and clicking a skin changes P1. `Tab` switches loadout tabs. `Esc` or `P` pauses gameplay; `R` restarts. `F11` toggles fullscreen; `F10` toggles FPS information.
 
-### 2.7 Thematic Map Visuals
-- **Kitchen**: Checkerboard tile floor, wall grid, hanging copper pans rack, cupboards.
-- **Living Room**: Wood parquet floor, striped wallpaper, large bookshelf with books, cozy painting.
-- **Bedroom**: Starry arched window showing moon and twinkling stars, pastel wallpaper, soft carpet floor.
-- **Garden**: Fresh green grass floor with grass blades, wooden picket fence, drifting fluffy clouds.
-- **Rooftop**: Terracotta chimney bricks floor, deep night sky with glowing crescent moon, skyscraper skyline.
+**F9 is a development shortcut:** the first press refills the wallet to 1,000,000 fish while enabled; the next press replaces the profile with first-player defaults, including unlocks, wallet and leaderboards.
 
-### 2.8 Clean HUD, Buff Visuals & Game Over Screen
-- **Clean In-Game HUD**: Displays `TIME: 00:24.5s`, `SCORE: 245`, `🐟 FISHES: +14`, `BEST: 1250`. Redundant P1 state removed.
-- **Clean Buff Visuals**: Shield hits trigger bubble glass shatter particles; no cluttering floating text.
-- **Buff Limits**: One pickup or timed effect at a time. Every pickup grants 50 points. Type cooldowns begin after despawn/effect completion: Double Score 25s, Bomb/Invincibility 35s, Shield/Heart 45s. Heart requires a downed teammate. See the current gameplay table for lifetimes and weights.
-- **Game Over Screen**: Prominent full-screen banner with celebratory **Survival Titles / Ranks**:
-  - $< 20$s: **"Noob Kitten" / "Mèo Mới Vào Nghề"**
-  - $20 - 60$s: **"Quick Paws" / "Mèo Nhanh Nhẹn"**
-  - $60 - 120$s: **"Acrobatic Feline" / "Bậc Thầy Nhào Lộn"**
-  - $120 - 200$s: **"Shadow Dodger" / "Bóng Ma Né Đòn"**
-  - $> 200$s: **"King of Dodge" / "Vua Sinh Tồn"**
-- Displays run-only fishes collected, score, and buttons: `Play Again` and `Main Menu`.
-- **Pause Menu**: Includes `Resume`, `Restart`, and `Return to Main Menu`.
+Score grows by 10 points per simulation second, or 20 while a living player has Double Score. Every collected buff adds 50 points. Both players share the run score and fish count; co-op ends when both cats are dead. Fish and the leaderboard entry are saved once at Game Over. Restarting, quitting or returning to menu before that discards the unfinished run's rewards. Normal saves are in `%USERPROFILE%/.dodgingcat/dodging_cat_profile.json`; portable saves are beside that copy in `data/profile.json`.
 
----
+## Documentation map
 
-## 3. Technical Contribution: Fairness-Aware Procedural Generation
+Detailed guides are primarily in Vietnamese, using the same class names and IDs as the source. Each guide links back to this index.
 
-Every procedural candidate must pass 5 explicit safety rules evaluated by `FairnessValidator`:
-1. **Minimum Spawn Delay**: Mandatory cooldown between spawns.
-2. **Active Hazard Limit**: Tier-based cap on simultaneous hazards (0–<30s: 3, 30–<60s: 6, 60–<120s: 9, ≥120s: 12). This limits hazards active at one time, not the cumulative number spawned during a run.
-3. **Safe-Zone Padding**: Minimum physical clearance buffer around living cats.
-4. **Human Reaction Time Window**: Rejects any candidate impacting in under 280ms.
-5. **Escape Corridor Density**: Caps simultaneous laser and cannon warning channels to prevent unavoidable walls.
+| Topic | Guide |
+| --- | --- |
+| Installation, controls, save/reset behavior, test commands | [Run, play and test](docs/running-and-testing.md) |
+| States, render loop, collision and fairness rules | [Architecture and source map](docs/architecture.md) |
+| Buff rates/cooldowns, currency, hazards, platforms and scoring | [Gameplay parameters](docs/gameplay-thong-so.md) |
+| All 15 skins, five maps, prices, odds and reveal sequence | [Shop, gacha and loadout](docs/shop-and-loadout.md) |
+| Native rendering, measurement limits and current verification | [Performance and verification](docs/performance.md) |
+| Offline Windows demo and submission packaging | [Portable package](docs/portable-windows.md) |
+| Image grids, raster lettering, alpha bounds and branding | [Image assets](src/main/resources/assets/images/README.md) |
+| WAV/MP3 names, playback and conversion rules | [Audio assets](src/main/resources/assets/audio/README.md) |
+| Art generators, packaging scripts and helper templates | [Tools](tools/README.md) |
+| Older performance/packaging experiments | [Historical records](docs/history/README.md) |
 
-$$\text{Invalid Generation Rate} = \frac{\text{Candidates Rejected}}{\text{Total Candidates Generated}}$$
+## Repository layout
 
----
+```text
+src/main/java/com/dodgingcat/   application, simulation, UI, generation, audio, saves
+src/main/resources/           game images, audio and legacy JavaFX CSS
+src/test/java/com/dodgingcat/  logic tests, UI snapshots and opt-in desktop probes
+docs/                        detailed guides and historical evidence
+tools/                       art generators and portable script templates
+pom.xml                      Maven build and dependency versions
+```
 
-## 4. How to Run the Game
+`target/`, `.git/`, IDE caches and `deliverables/` are not part of a source submission. Generated portable archives, the final report and slides are not stored in this branch. See the packaging guide for the one-file 100 MB LMS constraint supplied by the team.
 
-Navigate to `E:\ProjectJSD\AntigravityVersion`:
+## Team TADQ
 
-1. **One-Click Launch**: Double-click **`run.cmd`** or in PowerShell:
-   ```powershell
-   .\dev.ps1 -Task run
-   ```
-   Press `F9` to enable development mode with a continually refilled fish balance. Press `F9` again to reset the saved profile to the first-time player defaults (including scores and unlocks).
-2. **Run Automated Tests**: Double-click **`test.cmd`** or in PowerShell:
-   ```powershell
-   .\dev.ps1 -Task test
-   ```
-3. **Standard Maven Commands**:
-   ```bash
-   mvn clean test
-   mvn javafx:run
-   ```
+| Student ID | Name |
+| --- | --- |
+| 2301040209 | Hoang Kien Quyet |
+| 2301040013 | Tran Quang Anh |
+| 2301040042 | Nguyen Cong Doan |
+| 2301040171 | Tran Gia Thanh |
+
+All four members developed separate game prototypes. The group selected this version, developed by Tran Quang Anh, as its submission base. Later integration, tests, documentation and packaging contributions must be recorded from the work each member actually completes; this README does not assign unverified implementation responsibilities.
+
+Documentation checked against the source on **28 October 2026**. Performance figures are measurements on a particular machine, not a promise of 60 FPS on every computer. Runtime behavior and active code take precedence over old comments and historical experiment reports.

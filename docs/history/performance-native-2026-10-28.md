@@ -1,11 +1,15 @@
 # Render native và cân bằng gameplay — 28/10/2026
 
+[History index](README.md) · [Current documentation](../README.md) · [Current performance](../performance.md) · [Current packaging](../portable-windows.md)
+
+> Historical record only / Hồ sơ lịch sử. Measurements, counts, paths and descriptions below belong to the experiment when recorded; they are not current configuration or guaranteed available artifacts. Current fish spawn is 4s, render is native Java2D and test counts are in the current verification guide. The old 720p/decode-192px choices and backup paths must not be used as present-day instructions.
+
 ## Gameplay
 
 - Mọi buff cộng đúng 50 điểm khi nhặt, không nhân đôi bởi x2.
 - Cooldown x2 25s, Bomb/Invincibility 35s, Shield/Heart 45s. Đếm sau khi buff biến mất hoặc hiệu lực kết thúc, gồm trường hợp khiên vỡ và bảo vệ hồi sinh Heart.
 - Tiền xuất hiện mỗi 5s, tồn tại 5s, tối đa 5 vật phẩm; 85% +1, 15% +5.
-- [Thông số buff, tiền, hazard và gacha](gameplay-thong-so.md).
+- [Thông số buff, tiền, hazard và gacha](../gameplay-thong-so.md).
 
 ## Bộ render hiện hành
 

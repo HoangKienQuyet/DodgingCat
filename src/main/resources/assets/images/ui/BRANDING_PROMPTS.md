@@ -1,5 +1,9 @@
 # Illustrated branding assets
 
+[Image guide](../README.md) · [Documentation index](../../../../../../docs/README.md) · [Root README](../../../../../../README.md)
+
+This is an asset provenance record, not a gameplay specification. Prompts below describe the intended generation/edit; the shipped PNGs and renderer determine actual appearance.
+
 Title generated on 2026-10-27; team logo lettering corrected on 2026-10-28 with the built-in `image_gen` tool in transparent edit mode. The existing title and logo were explicitly replaced at the user's request. No API/CLI fallback was used.
 
 Final assets:
