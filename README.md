@@ -1,4 +1,4 @@
-# Dodging Cat (Antigravity Version v1.2)
+# Dodging Cat 
 
 > **Working project documentation for team review.** Gameplay and performance notes linked below reflect the current implementation; other descriptions may need updating before submission.
 
@@ -14,7 +14,7 @@ For a Windows demo without installed Java/Maven, use the [direct-source portable
 
 | Item | Details |
 | :--- | :--- |
-| **Project Name** | Dodging Cat (Antigravity Version) |
+| **Project Name** | Dodging Cat  |
 | **Team** | TADQ |
 | **Course** | Java Software Development (Academic Year 2026–2027) |
 | **Instructor** | Ngô Văn Quyền |
