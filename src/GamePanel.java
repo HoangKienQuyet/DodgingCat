@@ -12,9 +12,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
     public static final int BASE_WIDTH = 960;
     public static final int BASE_HEIGHT = 540;
 
-    private GameState gameState = GameState.TITLE;
+    private DodgingCatApp app;
+    private GameState gameState = GameState.MAP_SELECT;
     private final Timer timer;
     private final Random random = new Random();
+
+    // Biến lưu số lượng người chơi (1 hoặc 2)
+    private int numPlayers = 1;
 
     private int selectedMapIndex = 0;
     private int score = 0;
@@ -28,7 +32,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
     private long warningHideTime = 0;
 
     private final List<MapConfig> mapsConfig = new ArrayList<>();
-    private final Player player = new Player();
+
+    private final Player player1 = new Player(1, 100);
+    private final Player player2 = new Player(2, 200);
+
     private final List<Platform> platforms = new ArrayList<>();
     private final List<Hazard> hazards = new ArrayList<>();
 
@@ -36,9 +43,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
     private int fishRespawnTimer = 0;
     private BufferedImage fishImage;
 
-    private boolean keyLeft = false, keyRight = false, keyJump = false;
+    private boolean p1Left = false, p1Right = false, p1Jump = false;
+    private boolean p2Left = false, p2Right = false, p2Jump = false;
 
-    public GamePanel() {
+    public GamePanel(DodgingCatApp app) {
+        this.app = app;
         setPreferredSize(new Dimension(BASE_WIDTH, BASE_HEIGHT));
         setBackground(Color.BLACK);
         setFocusable(true);
@@ -47,34 +56,36 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 
         initMaps();
         initPlatforms();
-        player.loadAssets();
+
+        player1.loadAssets();
+        player2.loadAssets();
 
         fishImage = AssetLoader.loadImage("assests/platforms/fish/fish.png");
 
-        timer = new Timer(16, this); // ~60 FPS
+        timer = new Timer(16, this);
         timer.start();
+    }
+
+    public void setNumPlayers(int players) {
+        this.numPlayers = players;
     }
 
     private void initMaps() {
         mapsConfig.add(new MapConfig("Green Forest", "assests/backgrounds/forest.png", "assests/platforms/forest/2.png",
-                new String[] { "assests/platforms/forest/Mushroom_1.png", "assests/platforms/forest/Mushroom_2.png",
-                        "assests/platforms/forest/Crate.png", "assests/platforms/forest/Stone.png" }));
+                new String[] { "assests/platforms/forest/Mushroom_1.png", "assests/platforms/forest/Crate.png",
+                        "assests/platforms/forest/Stone.png", "assests/hazards/weight.png" }));
         mapsConfig.add(new MapConfig("Desert Dunes", "assests/backgrounds/desert.png", "assests/platforms/desert/2.png",
-                new String[] { "assests/platforms/desert/Cactus (1).png", "assests/platforms/desert/Cactus (2).png",
-                        "assests/platforms/desert/Cactus (3).png", "assests/platforms/desert/Skeleton.png",
-                        "assests/platforms/desert/StoneBlock.png" }));
+                new String[] { "assests/platforms/desert/Cactus (1).png", "assests/platforms/desert/Skeleton.png",
+                        "assests/hazards/weight.png" }));
         mapsConfig.add(new MapConfig("Graveyard", "assests/backgrounds/graveyard.png",
                 "assests/platforms/graveyard/Tile (2).png",
                 new String[] { "assests/platforms/graveyard/TombStone (1).png",
-                        "assests/platforms/graveyard/TombStone (2).png", "assests/platforms/graveyard/Skeleton.png",
-                        "assests/platforms/graveyard/Bone (1).png", "assests/platforms/graveyard/DeadBush.png" }));
+                        "assests/platforms/graveyard/Skeleton.png", "assests/hazards/weight.png" }));
         mapsConfig.add(new MapConfig("Snowy Winter", "assests/backgrounds/winter.png", "assests/platforms/winter/2.png",
-                new String[] { "assests/platforms/winter/SnowMan.png", "assests/platforms/winter/Crystal.png",
-                        "assests/platforms/winter/IceBox.png", "assests/platforms/winter/Igloo.png" }));
-
-        for (MapConfig m : mapsConfig) {
+                new String[] { "assests/platforms/winter/SnowMan.png", "assests/platforms/winter/IceBox.png",
+                        "assests/hazards/weight.png" }));
+        for (MapConfig m : mapsConfig)
             m.loadAssets();
-        }
     }
 
     private void initPlatforms() {
@@ -90,6 +101,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
         platforms.add(new Platform(720, 190, 160, 24));
     }
 
+    public void openMapSelect() {
+        gameState = GameState.MAP_SELECT;
+    }
+
     private void startGame() {
         gameState = GameState.PLAYING;
         score = 0;
@@ -98,9 +113,12 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
         lastDifficultyIncrease = 0;
         hazardSpeedMultiplier = 1.0;
         spawnInterval = 1800;
-        player.reset();
-        hazards.clear();
 
+        player1.reset();
+        if (numPlayers == 2)
+            player2.reset();
+
+        hazards.clear();
         fishRespawnTimer = 0;
         spawnSingleFish();
         lastSpawnTime = System.currentTimeMillis();
@@ -165,12 +183,20 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
             lastSpawnTime = now;
         }
 
-        player.update(keyLeft, keyRight, keyJump, platforms, BASE_WIDTH);
+        player1.update(p1Left, p1Right, p1Jump, platforms, BASE_WIDTH);
+        if (numPlayers == 2) {
+            player2.update(p2Left, p2Right, p2Jump, platforms, BASE_WIDTH);
+        }
 
         for (int i = hazards.size() - 1; i >= 0; i--) {
             Hazard h = hazards.get(i);
             h.update();
-            if (h.checkCollision(player)) {
+
+            boolean hit = h.checkCollision(player1);
+            if (numPlayers == 2 && h.checkCollision(player2))
+                hit = true;
+
+            if (hit) {
                 gameState = GameState.GAMEOVER;
             }
             if (h.isOutOfBounds(BASE_WIDTH, BASE_HEIGHT)) {
@@ -179,7 +205,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
         }
 
         if (activeFish != null) {
-            if (activeFish.checkCollect(player)) {
+            boolean collected = activeFish.checkCollect(player1);
+            if (numPlayers == 2 && activeFish.checkCollect(player2))
+                collected = true;
+
+            if (collected) {
                 fishesCollected++;
                 activeFish = null;
                 fishRespawnTimer = 60;
@@ -187,9 +217,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
         } else {
             if (fishRespawnTimer > 0) {
                 fishRespawnTimer--;
-                if (fishRespawnTimer <= 0) {
+                if (fishRespawnTimer <= 0)
                     spawnSingleFish();
-                }
             }
         }
     }
@@ -200,65 +229,52 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
         Graphics2D g2d = (Graphics2D) g;
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Tự động Scale theo độ phân giải màn hình khi phóng to/thu nhỏ
         double scaleX = (double) getWidth() / BASE_WIDTH;
         double scaleY = (double) getHeight() / BASE_HEIGHT;
         g2d.scale(scaleX, scaleY);
 
         MapConfig currentMap = mapsConfig.get(selectedMapIndex);
-        if (currentMap.bgImage != null) {
+        if (currentMap.bgImage != null)
             g2d.drawImage(currentMap.bgImage, 0, 0, BASE_WIDTH, BASE_HEIGHT, null);
-        }
-
-        for (Platform p : platforms) {
+        for (Platform p : platforms)
             p.draw(g2d, currentMap.platformImage);
-        }
 
-        if (gameState == GameState.PLAYING || gameState == GameState.PAUSED) {
-            if (activeFish != null) {
+        if (gameState == GameState.PLAYING || gameState == GameState.PAUSED || gameState == GameState.GAMEOVER) {
+            if (activeFish != null)
                 activeFish.draw(g2d, fishImage);
-            }
-
             for (Hazard h : hazards)
                 h.draw(g2d, BASE_WIDTH);
-            player.draw(g2d);
+
+            player1.draw(g2d);
+            if (numPlayers == 2) {
+                player2.draw(g2d);
+            }
+
             drawHUD(g2d);
 
-            // Vẽ màn hình Pause đè lên nếu đang mở Menu Pause
-            if (gameState == GameState.PAUSED) {
+            if (gameState == GameState.PAUSED)
                 drawPauseScreen(g2d);
-            }
-        } else if (gameState == GameState.TITLE)
-            drawTitleScreen(g2d);
-        else if (gameState == GameState.MAP_SELECT)
+            else if (gameState == GameState.GAMEOVER)
+                drawGameOverScreen(g2d);
+        } else if (gameState == GameState.MAP_SELECT) {
             drawMapSelectScreen(g2d);
-        else if (gameState == GameState.HOW_TO_PLAY)
-            drawHowToPlayScreen(g2d);
-        else if (gameState == GameState.GAMEOVER)
-            drawGameOverScreen(g2d);
+        }
 
         Toolkit.getDefaultToolkit().sync();
     }
 
     private void drawHUD(Graphics2D g2d) {
-        // Tăng độ trong suốt nền HUD (alpha = 150) để vẫn quan sát được vật thể phía
-        // sau
         g2d.setColor(new Color(15, 23, 42, 150));
+        g2d.fillRoundRect(15, 8, 110, 26, 10, 10);
+        g2d.fillRoundRect(BASE_WIDTH / 2 - 70, 8, 140, 26, 10, 10);
+        g2d.fillRoundRect(BASE_WIDTH - 125, 8, 110, 26, 10, 10);
 
-        // Thu nhỏ kích thước 3 hộp thông số (Chiều cao giảm từ 36px -> 26px, đẩy sát
-        // mép trên y = 8)
-        g2d.fillRoundRect(15, 8, 110, 26, 10, 10); // TIME
-        g2d.fillRoundRect(BASE_WIDTH / 2 - 70, 8, 140, 26, 10, 10); // SCORE
-        g2d.fillRoundRect(BASE_WIDTH - 125, 8, 110, 26, 10, 10); // FISH
-
-        // Font chữ thu nhỏ còn 12px gọn gàng
         g2d.setColor(Color.WHITE);
         g2d.setFont(new Font("SansSerif", Font.BOLD, 12));
         g2d.drawString(String.format("TIME: %.1fs", gameTime), 25, 25);
         g2d.drawString("SCORE: " + score, BASE_WIDTH / 2 - 42, 25);
         g2d.drawString("FISH: " + fishesCollected, BASE_WIDTH - 105, 25);
 
-        // Thu nhỏ bảng SPEED UP! (chiều cao chỉ còn 22px, đẩy lên gần Score)
         if (showSpeedUpWarning) {
             g2d.setColor(new Color(239, 68, 68, 220));
             g2d.fillRoundRect(BASE_WIDTH / 2 - 60, 38, 120, 22, 10, 10);
@@ -280,20 +296,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
         drawButton(g2d, BASE_WIDTH / 2 - 100, 375, 200, 42, "QUIT", new Color(239, 68, 68));
     }
 
-    private void drawTitleScreen(Graphics2D g2d) {
-        drawOverlayBackground(g2d);
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 54));
-        g2d.setColor(new Color(251, 191, 36));
-        g2d.drawString("DODGING CAT", BASE_WIDTH / 2 - 180, 180);
-
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        g2d.setColor(new Color(148, 163, 184));
-        g2d.drawString("Java Edition Platformer", BASE_WIDTH / 2 - 80, 215);
-
-        drawButton(g2d, BASE_WIDTH / 2 - 100, 270, 200, 45, "PLAY GAME", new Color(16, 185, 129));
-        drawButton(g2d, BASE_WIDTH / 2 - 100, 330, 200, 45, "HOW TO PLAY", new Color(51, 65, 85));
-    }
-
     private void drawMapSelectScreen(Graphics2D g2d) {
         drawOverlayBackground(g2d);
         g2d.setFont(new Font("SansSerif", Font.BOLD, 32));
@@ -310,9 +312,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
             g2d.drawRoundRect(x, y, 160, 110, 12, 12);
 
             BufferedImage bgThumb = mapsConfig.get(i).bgImage;
-            if (bgThumb != null) {
+            if (bgThumb != null)
                 g2d.drawImage(bgThumb, x + 4, y + 4, 152, 102, null);
-            }
 
             g2d.setColor(new Color(15, 23, 42, 220));
             g2d.fillRect(x + 4, y + 80, 152, 26);
@@ -323,25 +324,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
 
         drawButton(g2d, BASE_WIDTH / 2 - 170, 360, 150, 45, "BACK", new Color(51, 65, 85));
         drawButton(g2d, BASE_WIDTH / 2 + 20, 360, 150, 45, "START", new Color(16, 185, 129));
-    }
-
-    private void drawHowToPlayScreen(Graphics2D g2d) {
-        drawOverlayBackground(g2d);
-        g2d.setFont(new Font("SansSerif", Font.BOLD, 32));
-        g2d.setColor(new Color(251, 191, 36));
-        g2d.drawString("HOW TO PLAY", BASE_WIDTH / 2 - 110, 130);
-
-        g2d.setColor(new Color(30, 41, 59, 220));
-        g2d.fillRoundRect(BASE_WIDTH / 2 - 220, 160, 440, 180, 15, 15);
-
-        g2d.setColor(Color.WHITE);
-        g2d.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        g2d.drawString("- Di chuyển: A / D hoặc Phím mũi tên", BASE_WIDTH / 2 - 180, 200);
-        g2d.drawString("- Nhảy cao: W / Space / Phím mũi tên lên", BASE_WIDTH / 2 - 180, 235);
-        g2d.drawString("- Tạm dừng: Bấm phím ESC", BASE_WIDTH / 2 - 180, 270);
-        g2d.drawString("- Mục tiêu: Ăn cá 🐟 và sinh tồn lâu nhất có thể", BASE_WIDTH / 2 - 180, 305);
-
-        drawButton(g2d, BASE_WIDTH / 2 - 80, 370, 160, 45, "GOT IT!", new Color(51, 65, 85));
     }
 
     private void drawGameOverScreen(Graphics2D g2d) {
@@ -381,73 +363,76 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener, Mo
     @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-
-        // Bắt phím ESC để bật/tắt Tạm dừng game
         if (code == KeyEvent.VK_ESCAPE) {
-            if (gameState == GameState.PLAYING) {
+            if (gameState == GameState.PLAYING)
                 gameState = GameState.PAUSED;
-            } else if (gameState == GameState.PAUSED) {
+            else if (gameState == GameState.PAUSED)
                 gameState = GameState.PLAYING;
-            }
         }
 
-        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT)
-            keyLeft = true;
-        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT)
-            keyRight = true;
-        if (code == KeyEvent.VK_W || code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP)
-            keyJump = true;
+        if (code == KeyEvent.VK_A)
+            p1Left = true;
+        if (code == KeyEvent.VK_D)
+            p1Right = true;
+        if (code == KeyEvent.VK_W)
+            p1Jump = true;
+
+        if (code == KeyEvent.VK_LEFT)
+            p2Left = true;
+        if (code == KeyEvent.VK_RIGHT)
+            p2Right = true;
+        if (code == KeyEvent.VK_UP)
+            p2Jump = true;
     }
 
     @Override
     public void keyReleased(KeyEvent e) {
         int code = e.getKeyCode();
-        if (code == KeyEvent.VK_A || code == KeyEvent.VK_LEFT)
-            keyLeft = false;
-        if (code == KeyEvent.VK_D || code == KeyEvent.VK_RIGHT)
-            keyRight = false;
-        if (code == KeyEvent.VK_W || code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP)
-            keyJump = false;
+
+        if (code == KeyEvent.VK_A)
+            p1Left = false;
+        if (code == KeyEvent.VK_D)
+            p1Right = false;
+        if (code == KeyEvent.VK_W)
+            p1Jump = false;
+
+        if (code == KeyEvent.VK_LEFT)
+            p2Left = false;
+        if (code == KeyEvent.VK_RIGHT)
+            p2Right = false;
+        if (code == KeyEvent.VK_UP)
+            p2Jump = false;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        // Tự động chuyển đổi tọa độ chuột khi phóng to/thu nhỏ cửa sổ
         double scaleX = (double) getWidth() / BASE_WIDTH;
         double scaleY = (double) getHeight() / BASE_HEIGHT;
         int mx = (int) (e.getX() / scaleX);
         int my = (int) (e.getY() / scaleY);
 
-        if (gameState == GameState.TITLE) {
-            if (isInBounds(mx, my, BASE_WIDTH / 2 - 100, 270, 200, 45))
-                gameState = GameState.MAP_SELECT;
-            else if (isInBounds(mx, my, BASE_WIDTH / 2 - 100, 330, 200, 45))
-                gameState = GameState.HOW_TO_PLAY;
-        } else if (gameState == GameState.MAP_SELECT) {
+        if (gameState == GameState.MAP_SELECT) {
             for (int i = 0; i < mapsConfig.size(); i++) {
                 int x = 120 + i * 190;
                 if (isInBounds(mx, my, x, 180, 160, 110))
                     selectedMapIndex = i;
             }
             if (isInBounds(mx, my, BASE_WIDTH / 2 - 170, 360, 150, 45))
-                gameState = GameState.TITLE;
+                app.showMenu();
             else if (isInBounds(mx, my, BASE_WIDTH / 2 + 20, 360, 150, 45))
                 startGame();
-        } else if (gameState == GameState.HOW_TO_PLAY) {
-            if (isInBounds(mx, my, BASE_WIDTH / 2 - 80, 370, 160, 45))
-                gameState = GameState.TITLE;
         } else if (gameState == GameState.PAUSED) {
             if (isInBounds(mx, my, BASE_WIDTH / 2 - 100, 210, 200, 42))
-                gameState = GameState.PLAYING; // Resume
+                gameState = GameState.PLAYING;
             else if (isInBounds(mx, my, BASE_WIDTH / 2 - 100, 265, 200, 42))
-                startGame(); // Restart
+                startGame();
             else if (isInBounds(mx, my, BASE_WIDTH / 2 - 100, 320, 200, 42))
-                gameState = GameState.TITLE; // Main Menu
+                app.showMenu();
             else if (isInBounds(mx, my, BASE_WIDTH / 2 - 100, 375, 200, 42))
-                System.exit(0); // Quit
+                System.exit(0);
         } else if (gameState == GameState.GAMEOVER) {
             if (isInBounds(mx, my, BASE_WIDTH / 2 - 170, 300, 150, 45))
-                gameState = GameState.TITLE;
+                app.showMenu();
             else if (isInBounds(mx, my, BASE_WIDTH / 2 + 20, 300, 150, 45))
                 startGame();
         }

@@ -6,10 +6,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    public double x = 100, y = 350;
+    public int id;
+    public double startX;
+
+    public double x, y;
     public int w = 44, h = 44;
     public double vx = 0, vy = 0;
-    public double speed = 2.9;
+    public double speed = 2.6;
     public double jumpPower = -12.0;
     public double gravity = 0.38;
     public boolean isGrounded = false;
@@ -21,15 +24,25 @@ public class Player {
     private final List<BufferedImage> runFrames = new ArrayList<>();
     private final List<BufferedImage> jumpFrames = new ArrayList<>();
 
+    // Thêm constructor để truyền ID và vị trí bắt đầu
+    public Player(int id, double startX) {
+        this.id = id;
+        this.startX = startX;
+        this.x = startX;
+        this.y = 350;
+    }
+
     public void loadAssets() {
+        // Tự động load ảnh từ thư mục cat1 hoặc cat2 dựa vào ID
+        String folder = "cat" + id;
         for (int i = 1; i <= 8; i++) {
-            runFrames.add(AssetLoader.loadImage("assests/player/Run (" + i + ").png"));
-            jumpFrames.add(AssetLoader.loadImage("assests/player/Jump (" + i + ").png"));
+            runFrames.add(AssetLoader.loadImage("assests/player/" + folder + "/Run (" + i + ").png"));
+            jumpFrames.add(AssetLoader.loadImage("assests/player/" + folder + "/Jump (" + i + ").png"));
         }
     }
 
     public void reset() {
-        x = 100;
+        x = startX; // Đứng ở vị trí riêng của từng người
         y = 350;
         vx = 0;
         vy = 0;
@@ -94,15 +107,11 @@ public class Player {
                 : currentAnim.get(frame % currentAnim.size());
 
         if (sprite != null) {
-            // Thay thế g2d.save() bằng dòng dưới:
             AffineTransform oldTransform = g2d.getTransform();
-
             g2d.translate(x + w / 2.0, y + h / 2.0);
             if (facing == -1)
                 g2d.scale(-1, 1);
             g2d.drawImage(sprite, -w / 2 - 8, -h / 2 - 8, w + 16, h + 16, null);
-
-            // Thay thế g2d.restore() bằng dòng dưới:
             g2d.setTransform(oldTransform);
         } else {
             g2d.setColor(Color.ORANGE);
