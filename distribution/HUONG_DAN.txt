@@ -1,0 +1,62 @@
+DODGING CAT v1.3 — WINDOWS x64
+Cập nhật 26/10/2026
+
+CHƠI NGAY
+1. Giải nén TOÀN BỘ file ZIP vào một thư mục.
+2. Mở Play.cmd. Bản này kèm Java runtime và JavaFX;
+   không cần cài Maven, Java hay kết nối Internet để chơi.
+3. Chọn "1 PLAYER" hoặc "2 PLAYERS · FISH RACE".
+4. Chọn "01 · GARDEN" hoặc "02 · KITCHEN", rồi nhấn
+   "START PLAYING" hoặc ENTER. Toàn bộ chữ trong game là tiếng Anh.
+
+HAI BẢN ĐỒ
+- Cả hai mở sẵn miễn phí, chọn tại menu; không tự chuyển màn sau khi thắng.
+  Chơi lại/đổi chế độ giữ map đã chọn trong phiên; mở game mới dùng Garden.
+- Garden: mũi tên và vùng độc trôi; bố cục bệ riêng.
+- Kitchen: dao, kéo và lửa bếp gas; bố cục bệ khác Garden.
+- Hai bản đồ không tự sinh laser. Mũi tên không có dấu báo trước.
+- Mèo có hoạt ảnh chạy, nhảy và rơi. Hoạt ảnh không đổi khung va chạm.
+
+ĐIỀU KHIỂN
+- Solo: A/D hoặc trái/phải để di chuyển; SPACE/W/lên để nhảy;
+  S/xuống để rơi xuyên bệ.
+- Versus P1: A/D di chuyển, W/SPACE nhảy, S rơi xuyên bệ.
+- Versus P2: trái/phải di chuyển, lên nhảy, xuống rơi xuyên bệ.
+- Thả rồi nhấn lại phím nhảy. ESC/P tạm dừng; ENTER tiếp tục/chơi lại.
+  R chơi lại khi kết thúc. Rời khỏi cửa sổ cũng tự động tạm dừng.
+
+LUẬT CHƠI
+- Trúng bẫy sẽ bị loại, trừ khi có Shield hoặc Invincibility.
+- Nhặt cá/buff sẽ hiện chữ nổi tại chỗ nhặt, bay lên rồi mờ đi:
+  "+1 fish", "+2 fish" hoặc tên hiệu ứng. Versus có nhãn P1/P2.
+- Versus giới hạn 60 GIÂY; hết giờ hoặc cả hai bị loại sớm thì kết thúc.
+  Một người bị loại thì người còn lại vẫn chơi đến khi vòng kết thúc.
+  Ai nhiều cá hơn thắng; bằng cá thì hòa, không xét ai sống lâu hơn.
+- CHỈ SOLO hoàn thành mới cộng cá vào ví cửa hàng và cập nhật kỷ lục/lịch sử.
+  Cá Versus CHỈ tính thắng/thua, KHÔNG đổi thành tiền và KHÔNG lưu kết quả.
+- Điểm sinh tồn tính theo thời gian; buff nhân đôi CÁ, không nhân đôi điểm.
+  Garden và Kitchen dùng chung ví, kỷ lục và lịch sử Solo.
+
+CỬA HÀNG — "Shop · Cats & power-ups"
+- Tab CAT SKINS: Ginger cat miễn phí, Cream cat 25 cá, Charcoal cat 50 cá.
+  P2 tự đổi sang màu khác để phân biệt hai người.
+- Tab POWER-UPS: Shield 25 cá, Invincibility 40 cá, Double fish 60 cá,
+  Trap bomb 50 cá. Cả BỐN LOẠI đều cần mở khóa trong SOLO.
+- Mua một lần để buff CÓ THỂ RƠI NGẪU NHIÊN trong các lượt SOLO sau,
+  trên cả hai bản đồ. Không cấp buff đầu lượt, không cần trang bị
+  và không có nút kích hoạt thủ công. Mua lại món đã có không trừ tiền.
+- Hồ sơ SOLO mới chưa mua buff thì KHÔNG CÓ BUFF RƠI; vẫn nhặt cá bình thường.
+- VERSUS MỞ SẴN TẤT CẢ BUFF, không cần mua trong cửa hàng.
+- Shield đỡ 1 đòn, giữ đến khi đỡ đòn. Invincibility miễn sát thương 5 giây.
+  Double fish nhân đôi cá nhặt được trong 5 giây. Trap bomb xóa bẫy hiện có.
+
+TIẾN TRÌNH
+- File lưu: %USERPROFILE%\.dodgingcat\profile.json
+- Schema 1 giữ tiền/kỷ lục/mèo/lịch sử; buff mở khóa bắt đầu rỗng.
+  Schema 2 cũ giữ tiến trình và các buff đã mua; v1.3 không đổi schema.
+- Đóng cửa sổ hoặc bỏ lượt SOLO từ menu tạm dừng sẽ không giữ cá của lượt đó.
+- Sao lưu thư mục .dodgingcat khi game đã đóng để giữ tiến trình.
+
+Chỉ hỗ trợ bản phân phối Windows x64; đây không phải ứng dụng Android.
+Xem README.md, docs/TESTING.md và THIRD_PARTY.md để biết phạm vi,
+kết quả xác minh, mã nguồn và giấy phép.

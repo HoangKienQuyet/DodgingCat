@@ -1,15 +1,8 @@
 target/
-
-# IDE and editor files
+dist/
+.tools/
 .idea/
 .vscode/
 *.iml
-
-# OS files
-.DS_Store
-Thumbs.db
-
-# Logs and temporary files
 *.log
-*.tmp
-*.temp
+.DS_Store

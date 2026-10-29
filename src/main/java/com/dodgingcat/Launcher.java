@@ -1,8 +1,10 @@
 package com.dodgingcat;
 
-public class Launcher {
+/** Separate launcher also supports the classpath-based portable distribution. */
+public final class Launcher {
+    private Launcher() { }
 
     public static void main(String[] args) {
-        Main.main(args);
+        DodgingCatApp.main(args);
     }
 }

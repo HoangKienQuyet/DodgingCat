@@ -1,0 +1,52 @@
+.root { -fx-font-family: "Segoe UI"; -fx-font-size: 13px; -fx-text-fill: #dce9de; }
+.app { -fx-background-color: #102c2a; }
+.label { -fx-text-fill: #dce9de; }
+.brand-mark { -fx-background-color: #f7bd6a; -fx-text-fill: #173b34; -fx-font-size: 24px; -fx-font-weight: 900; -fx-padding: 0 10 3 10; -fx-background-radius: 10; }
+.brand { -fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #f6f0da; }
+.eyebrow { -fx-font-size: 10px; -fx-font-weight: 700; -fx-text-fill: #94afa1; }
+.edition { -fx-font-size: 10px; -fx-font-weight: 600; -fx-text-fill: #99bb9f; }
+.arena { -fx-border-color: #66876c; -fx-border-width: 1; -fx-effect: dropshadow(gaussian, #061b19, 24, .15, 0, 10); }
+.side-card { -fx-background-color: #193a34; -fx-border-color: #2c5043; -fx-border-radius: 10; -fx-background-radius: 10; -fx-padding: 15; }
+.side-title { -fx-font-size: 25px; -fx-font-weight: 700; -fx-text-fill: #edf0d9; -fx-line-spacing: 0; }
+.description { -fx-text-fill: #acbfb0; -fx-font-size: 12px; }
+.status { -fx-background-color: #284e40; -fx-background-radius: 5; -fx-padding: 5 8; -fx-text-fill: #b7d4a4; -fx-font-size: 10px; -fx-font-weight: 700; }
+.stat-value { -fx-font-size: 26px; -fx-font-weight: 700; -fx-text-fill: #ecedcf; }
+.amber { -fx-text-fill: #f7bd6a; }
+.small { -fx-font-size: 11px; }
+.muted { -fx-text-fill: #a4b6a8; }
+.key { -fx-font-family: "Consolas"; -fx-font-size: 11px; -fx-font-weight: 700; -fx-text-fill: #e9dec2; }
+.cat-name { -fx-font-size: 14px; -fx-font-weight: 600; -fx-text-fill: #f4e7c9; }
+.hud-caption { -fx-font-size: 9px; -fx-font-weight: 700; -fx-text-fill: #abc5b3; }
+.hud-value { -fx-font-family: "Consolas"; -fx-font-size: 25px; -fx-font-weight: 700; -fx-text-fill: #fff1c8; -fx-effect: dropshadow(gaussian, #18372f, 3, 1, 1, 2); }
+.button { -fx-cursor: hand; -fx-font-family: "Segoe UI"; -fx-font-weight: 700; -fx-font-size: 13px; -fx-padding: 12 20; -fx-background-radius: 7; -fx-border-radius: 7; }
+.button:hover { -fx-opacity: .88; }
+.button:pressed { -fx-translate-y: 1; }
+.button:disabled { -fx-opacity: .5; -fx-cursor: default; }
+.primary { -fx-background-color: #f4bd6a; -fx-text-fill: #27392c; -fx-pref-width: 320; -fx-effect: dropshadow(gaussian, #061c18, 12, .1, 0, 4); }
+.secondary { -fx-background-color: #2a5143; -fx-border-color: #52715a; -fx-text-fill: #e3ead5; }
+.menu-card > .secondary { -fx-pref-width: 320; }
+.selected { -fx-background-color: #a9c692; -fx-text-fill: #243b2b; }
+.pause-button { -fx-background-color: #284b3f; -fx-border-color: #5b7861; -fx-text-fill: #e9eccf; -fx-padding: 7 13; -fx-font-size: 18px; }
+.text-button { -fx-background-color: transparent; -fx-text-fill: #c1d1b6; -fx-padding: 6 14; }
+.scrim { -fx-background-color: rgba(10, 34, 29, .45); }
+.menu-card { -fx-background-color: rgba(21, 53, 43, .97); -fx-background-radius: 17; -fx-border-color: #74916c; -fx-border-radius: 17; -fx-padding: 27 26; -fx-effect: dropshadow(gaussian, #09241e, 34, .25, 0, 12); }
+.game-title { -fx-font-family: "Consolas"; -fx-font-size: 52px; -fx-font-weight: 900; -fx-text-fill: #fff0c8; -fx-text-alignment: center; -fx-line-spacing: -8px; }
+.menu-subtitle { -fx-font-size: 13px; -fx-text-fill: #bacab0; }
+.overlay-title { -fx-font-size: 31px; -fx-font-weight: 700; -fx-text-fill: #f9ecc8; }
+.result-score { -fx-font-family: "Consolas"; -fx-font-size: 64px; -fx-font-weight: 700; -fx-text-fill: #f7bd6a; }
+.skin-card { -fx-background-color: #204535; -fx-background-radius: 10; -fx-padding: 12 9; }
+.skin-card .button { -fx-font-size: 11px; -fx-padding: 9 12; }
+.toast { -fx-background-color: rgba(16, 44, 36, .9); -fx-background-radius: 7; -fx-padding: 8 17; -fx-text-fill: #f6dfaa; -fx-font-weight: 600; -fx-font-size: 12px; }
+.footer { -fx-font-size: 9px; -fx-font-weight: 600; -fx-text-fill: #6f9683; -fx-pref-height: 36; }
+.save-warning { -fx-font-size: 10px; -fx-text-fill: #ffd18d; }
+.mode-button { -fx-padding: 8 13; -fx-font-size: 11px; }
+.map-button { -fx-padding: 8 13; -fx-font-size: 11px; -fx-pref-width: 155; }
+.shop-tab { -fx-padding: 9 20; -fx-font-size: 11px; }
+.boost-badge { -fx-background-color: #315c4b; -fx-background-radius: 36; -fx-alignment: center; -fx-pref-width: 72; -fx-pref-height: 72; -fx-font-size: 38px; -fx-font-weight: 800; }
+.boost-shield { -fx-text-fill: #8de3de; }
+.boost-invincibility { -fx-text-fill: #dcb0ef; }
+.boost-double_fish { -fx-text-fill: #ffd188; }
+.boost-bomb { -fx-text-fill: #ff9c86; }
+.boost-description { -fx-text-fill: #b7c8b1; -fx-text-alignment: center; -fx-font-size: 11px; -fx-min-height: 40; }
+.player-one { -fx-text-fill: #f7bd6a; }
+.player-two { -fx-text-fill: #a9dde4; }
