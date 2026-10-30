@@ -98,18 +98,59 @@ The main game states include `BOOT`, `MENU`, `PRE_GAME_SELECT`, `COUNTDOWN`, `PL
 
 ## 5. Java Design
 
-The design divides the application into classes and packages according to their responsibilities. This makes it easier to understand which parts handle the game simulation, which parts display the game, and which parts manage supporting services.
+This section shows four Java design concepts through short excerpts from the project's actual classes. The snippets omit unrelated code and imports so the relevant class relationships are easier to see.
 
-| Design concept | Example in the project | How it is used |
-|---|---|---|
-| Encapsulation | `Player`, `Platform`, `GameWorld`, `ShopManager`, `PersistenceManager` | Each class manages data and operations related to its own responsibility. |
-| Composition | `GameWorld` | The game world manages collections of game objects such as players, platforms, hazards, buffs, and collectible items. |
-| Polymorphism | Different hazard types | Different hazards provide their own behavior while being handled by shared game-generation or world logic. |
-| Separation of concerns | `GameController`, `GameWorld`, `GameRenderer`, `PersistenceManager`, `AudioManager` | Game coordination, simulation, drawing, saving, and audio are handled by separate components. |
+### Encapsulation — `Player`
 
-**How to provide evidence:** when explaining a concept in the report or presentation, refer to the actual class and show a small relevant code excerpt. For example, use the fields and methods of `Player` to demonstrate encapsulation, show how `GameWorld` manages its game objects to demonstrate composition, and compare the behavior of two concrete hazard classes to demonstrate polymorphism. Explain the class relationship as well as the concept; do not rely on a definition alone.
+`Player` keeps movement and life state private; movement is changed through methods that enforce the alive-state check.
 
-The README focuses on design concepts that can be explained through the project's components. Do not claim a specific SOLID principle, interface-based abstraction, or named design pattern unless you can point to the exact interface, class relationship, or code path that demonstrates it.
+```java
+private double vx;
+private boolean alive = true;
+private final double moveSpeed = 260.0;
+
+public void moveRight() {
+    if (!alive) return;
+    this.vx = moveSpeed;
+    this.facingDirection = 1;
+}
+```
+
+### Composition — `GameWorld`
+
+`GameWorld` owns collections of the objects that make up a run.
+
+```java
+private final List<Player> players = new ArrayList<>();
+private final List<Platform> platforms = new ArrayList<>();
+private final List<Hazard> hazards = new ArrayList<>();
+private final List<Buff> buffs = new ArrayList<>();
+```
+
+### Polymorphism — `Hazard` subclasses
+
+`GameWorld` handles every hazard through the `Hazard` type. Each concrete hazard provides its own `collidesWith` implementation, so the call uses the actual hazard's collision behavior.
+
+```java
+for (Hazard hazard : hazards) {
+    hazard.update(dt, width, height);
+    for (Player player : players) {
+        if (player.isAlive() && !player.isInvincible() && hazard.collidesWith(player)) {
+            player.applyHit();
+        }
+    }
+}
+```
+
+### Separation of concerns — `GameController`
+
+`GameController` coordinates input and state transitions, then delegates the world simulation to `GameWorld`.
+
+```java
+activeWorld.update(dt);
+```
+
+These are examples of the project's class responsibilities, not claims that it implements a particular SOLID principle or named design pattern.
 
 For more detailed class and state relationships, see [Architecture and source map](docs/architecture.md).
 
