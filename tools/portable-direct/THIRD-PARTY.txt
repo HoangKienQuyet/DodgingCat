@@ -1,0 +1,19 @@
+The direct-source portable bundle includes:
+
+OpenJDK 25 / Eclipse Temurin (https://adoptium.net/). Module-specific legal
+notices remain in the extracted support/runtime/legal directory.
+
+OpenJFX 25 (https://openjfx.io/). License and third-party notices are under
+support/licenses/javafx. Native libraries remain inside the original Maven JARs.
+
+Gson 2.13.2 (https://github.com/google/gson), Apache License 2.0. See
+support/licenses/gson-LICENSE.
+
+JLayer 1.0.1 (https://sourceforge.net/projects/javalayer/), LGPL 2.1 or later.
+The replaceable support/app/jlayer.jar is distributed with corresponding source
+under support/licenses/jlayer-1.0.1-sources.jar.
+
+7zr 26.05 (https://www.7-zip.org/download.html) identifies itself as public
+domain. It only extracts the bundled support/platform.7z on first launch.
+
+Game artwork and music credits remain in the project source documentation.
