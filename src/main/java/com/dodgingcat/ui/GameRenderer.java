@@ -1795,6 +1795,18 @@ public class GameRenderer {
         gc.setTextAlign(TextAlignment.CENTER);
         ArtText.fillText(gc, I18n.get("pregame.start"), cx, startBtnY + 32, startBtnW * 0.76);
 
+        if (tab == 0) {
+            gc.setFont(Font.font("Segoe UI", FontWeight.BOLD, 12));
+            gc.setFill(Color.web("#FFF4DE"));
+            double controlsY = startBtnY + startBtnH + 22;
+            if (mode == GameMode.LOCAL_COOP) {
+                ArtText.fillText(gc, I18n.get("pregame.p1_game_controls"), cx, controlsY, width - 80);
+                ArtText.fillText(gc, I18n.get("pregame.p2_game_controls"), cx, controlsY + 19, width - 80);
+            } else {
+                ArtText.fillText(gc, I18n.get("pregame.p1_game_controls"), cx, controlsY, width - 80);
+            }
+        }
+
         // Back button
         renderBackButton(gc, input, 40, height - 55);
     }
@@ -2462,4 +2474,3 @@ public class GameRenderer {
                 0, 0, width, height);
     }
 }
-

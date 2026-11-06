@@ -30,6 +30,8 @@ public class I18n {
         put("pregame.p2_skin_tab", "P2 Cat Skin", "Trang Phục P2");
         put("pregame.p1_controls", "P1: WASD move · Space select / cancel", "P1: WASD di chuyển · Space chọn / hủy");
         put("pregame.p2_controls", "P2: Arrows move · Enter select / cancel", "P2: Phím mũi tên di chuyển · Enter chọn / hủy");
+        put("pregame.p1_game_controls", "P1: A/D move · W jump · S drop through", "P1: A/D di chuyển · W nhảy · S xuyên sàn");
+        put("pregame.p2_game_controls", "P2: ⬅/➡ move · ⬆ jump · ⬇ drop through", "P2: ⬅/➡ di chuyển · ⬆ nhảy · ⬇ xuyên sàn");
         put("pregame.p1_ready", "P1 READY · Space to cancel", "P1 ĐÃ CHỌN · Space để hủy");
         put("pregame.p2_ready", "P2 READY · Enter to cancel", "P2 ĐÃ CHỌN · Enter để hủy");
         put("pregame.start", "START SURVIVAL", "BẮT ĐẦU SINH TỒN");
